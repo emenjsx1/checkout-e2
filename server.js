@@ -6,16 +6,20 @@ const path = require('path');
 
 const app = express();
 
+// Middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// Configurações
 const BASE_URL = 'https://e2payments.explicador.co.mz';
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const WALLET_MPESA = process.env.WALLET_MPESA;
-const WALLET_EMOLA = process.env.WALLET_EMOLA;
+const CLIENT_ID = process.env.CLIENT_ID || '9f86fd97-60ee-4776-b05e-dda0797f9c32';
+const CLIENT_SECRET = process.env.CLIENT_SECRET || '94haNPqlHOcsG3jRHqsEQyTTgVCXOaUf88CPDC0F';
+const WALLET_MPESA = process.env.WALLET_MPESA || '993607';
+const WALLET_EMOLA = process.env.WALLET_EMOLA || '993606';
+const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
+// Função para obter token
 async function getToken() {
     try {
         const response = await axios.post(`${BASE_URL}/oauth/token`, {
@@ -28,7 +32,6 @@ async function getToken() {
                 'Accept': 'application/json'
             }
         });
-
         return response.data.access_token;
     } catch (error) {
         console.error('Erro ao obter token:', error.response?.data || error.message);
@@ -36,29 +39,31 @@ async function getToken() {
     }
 }
 
+// Página principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Rota de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
 
     if (!nome || !email || !telefone || !metodo) {
-        return res.status(400).send(`<h2>❌ Todos os campos são obrigatórios.</h2><a href="/">← Voltar</a>`);
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
     }
 
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.status(400).send(`<h2>❌ Número inválido.</h2><a href="/">← Voltar</a>`);
+        return res.status(400).json({ erro: 'Número inválido.' });
     }
 
     try {
         const token = await getToken();
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
-        const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
 
-        const paymentPayload = {
+        const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
+        const payload = {
             client_id: CLIENT_ID,
-            amount: "10",
+            amount: "297",
             phone: telefone,
             reference: `Premise${Date.now()}`
         };
@@ -69,37 +74,32 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        const paymentResponse = await axios.post(endpoint, paymentPayload, { headers });
+        const response = await axios.post(endpoint, payload, { headers });
 
-        return res.send(`
-            <h1>✅ Pagamento Iniciado com Sucesso!</h1>
-            <p>Verifique seu telemóvel para confirmar.</p>
-            <a href="/">← Voltar ao início</a>
-        `);
+        // Envia notificação Pushcut
+        await axios.post(PUSHCUT_URL, {
+            text: `💰 Venda aprovada - ${nome}`,
+            title: 'Pagamento Iniciado'
+        });
+
+        res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
     } catch (error) {
         console.error('Erro no pagamento:', error.response?.data || error.message);
-        return res.status(500).send(`
-            <h2>❌ Erro no pagamento.</h2>
-            <p>Verifique saldo, número ou tente mais tarde.</p>
-            <a href="/">← Tentar novamente</a>
-        `);
+        res.status(500).send('Erro ao processar o pagamento.');
     }
 });
 
+// Health check
 app.get('/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        timestamp: new Date().toISOString(),
-        service: 'Premise Checkout API'
-    });
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// 404
 app.use('*', (req, res) => {
-    res.status(404).send(`<h2>404 - Página não encontrada</h2><a href="/">← Voltar</a>`);
+    res.status(404).send('Página não encontrada');
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
-
