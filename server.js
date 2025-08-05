@@ -15,19 +15,11 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
+const META_PIXEL_ID = '4179716432354886';
 
-const PUSHCUT_URL = process.env.PUSHCUT_URL;
-const WHATSAPP_FINAL = process.env.WHATSAPP_FINAL;
+// URL do Pushcut corretamente codificada
+const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
-if (!CLIENT_ID || !CLIENT_SECRET || !WALLET_MPESA || !WALLET_EMOLA || !PUSHCUT_URL || !WHATSAPP_FINAL) {
-    console.error('❌ Variáveis de ambiente faltando! Confira seu .env');
-    process.exit(1);
-}
-
-// Para guardar transações pendentes (na memória)
-const transacoes = new Map();
-
-// Função para obter token OAuth2
 async function getToken() {
     try {
         const response = await axios.post(`${BASE_URL}/oauth/token`, {
@@ -44,39 +36,22 @@ async function getToken() {
     }
 }
 
-// Função para consultar status da transação na e2payments
-async function checkPaymentStatus(token, walletId, reference) {
-    try {
-        // Exemplo hipotético - ajuste conforme docs oficiais da e2payments para consulta status
-        const url = `${BASE_URL}/v1/payments/status/${walletId}/${reference}`;
-        const res = await axios.get(url, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/json'
-            }
-        });
-        // Supondo que a resposta tem { status: 'SUCCESS' } ou similar
-        return res.data.status;
-    } catch (error) {
-        console.error('❌ Erro ao checar status:', error.response?.data || error.message);
-        return null;
-    }
-}
-
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Rota para iniciar pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
+    if (!nome || !email || !telefone || !metodo) {
+        return res.redirect('/');
+    }
 
-    if (!nome || !email || !telefone || !metodo) return res.redirect('/');
-    if (!/^(84|85|86|87)\d{7}$/.test(telefone)) return res.redirect('/');
+    if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
+        return res.redirect('/');
+    }
 
     try {
         const token = await getToken();
-
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
         const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
         const reference = `Premise${Date.now()}`;
@@ -94,17 +69,19 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        // Salvar a transação com status pendente
-        transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
+        if (!global.transacoes) global.transacoes = new Map();
+        global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
         await axios.post(endpoint, paymentPayload, { headers });
 
-        // Enviar página com popup e contagem + referência para frontend consultar
         res.send(`
             <html>
             <head>
                 <meta charset="UTF-8" />
-                <title>Aguarde - Premise</title>
+                <title>Aguarde</title>
+                <script>
+                    fbq('track', 'InitiateCheckout');
+                </script>
                 <style>
                     body {
                         font-family: sans-serif;
@@ -128,11 +105,6 @@ app.post('/pagar', async (req, res) => {
                         color: #333;
                         margin-top: 15px;
                     }
-                    .error {
-                        color: red;
-                        margin-top: 20px;
-                        font-weight: bold;
-                    }
                 </style>
             </head>
             <body>
@@ -140,53 +112,19 @@ app.post('/pagar', async (req, res) => {
                     <h2>🔒 Aguarde...</h2>
                     <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
                     <div class="countdown" id="countdown">180</div>
-                    <div class="error" id="error" style="display:none;"></div>
                 </div>
 
                 <script>
-                    const reference = "${reference}";
-                    const WHATSAPP_FINAL = "${WHATSAPP_FINAL}";
                     let seconds = 180;
                     const countdown = document.getElementById('countdown');
-                    const errorDiv = document.getElementById('error');
-
                     const interval = setInterval(() => {
                         seconds--;
                         countdown.textContent = seconds;
-                        if(seconds <= 0){
+                        if (seconds <= 0) {
                             clearInterval(interval);
-                            errorDiv.textContent = "❌ Tempo esgotado. Por favor, tente novamente.";
-                            errorDiv.style.display = "block";
-                            // Recarregar para voltar ao form de pagamento
-                            setTimeout(() => window.location.href = '/', 4000);
+                            countdown.textContent = "Agora verifique seu telemóvel 📱";
                         }
                     }, 1000);
-
-                    // Função para consultar status do pagamento a cada 5 segundos
-                    async function checkStatus(){
-                        try {
-                            const resp = await fetch('/check-status?reference=' + reference);
-                            const data = await resp.json();
-
-                            if(data.status === 'PAGO'){
-                                clearInterval(interval);
-                                window.location.href = WHATSAPP_FINAL;
-                            } else if(data.status === 'FALHOU'){
-                                clearInterval(interval);
-                                errorDiv.textContent = "❌ Pagamento não aprovado. Tente novamente.";
-                                errorDiv.style.display = "block";
-                                setTimeout(() => window.location.href = '/', 4000);
-                            } else {
-                                // Ainda pendente, tentar de novo
-                                setTimeout(checkStatus, 5000);
-                            }
-                        } catch(e){
-                            console.error("Erro ao verificar status:", e);
-                            setTimeout(checkStatus, 5000);
-                        }
-                    }
-
-                    checkStatus();
                 </script>
             </body>
             </html>
@@ -198,57 +136,59 @@ app.post('/pagar', async (req, res) => {
     }
 });
 
-// Endpoint para o frontend checar o status do pagamento
-app.get('/check-status', async (req, res) => {
-    const { reference } = req.query;
-    if (!reference) return res.status(400).json({ error: 'reference required' });
+app.post('/webhook/pagamento-confirmado', async (req, res) => {
+    const payload = req.body;
+    console.log('📬 Webhook recebido:', payload);
 
-    const transacao = transacoes.get(reference);
-    if (!transacao) return res.status(404).json({ error: 'transaction not found' });
+    if (payload.status === "SUCCESS") {
+        const reference = payload.reference;
+        const transacao = global.transacoes?.get(reference);
 
-    if (transacao.status === 'PAGO') {
-        return res.json({ status: 'PAGO' });
-    }
-    if (transacao.status === 'FALHOU') {
-        return res.json({ status: 'FALHOU' });
-    }
-
-    // Se pendente, vamos consultar a API para atualizar status
-    try {
-        const token = await getToken();
-        const walletId = transacao.metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
-        const status = await checkPaymentStatus(token, walletId, reference);
-
-        if(status === 'SUCCESS'){
+        if (transacao) {
             transacao.status = 'PAGO';
 
-            // Enviar notificação pushcut
+            const nome = transacao.nome || "Cliente";
+            const valor = transacao.valor || "297";
+
             try {
                 await axios.post(PUSHCUT_URL, {
                     title: "💰 Venda Aprovada",
-                    text: `📦 ${transacao.nome} pagou ${transacao.valor},00 MT`,
+                    text: `📦 ${nome} pagou ${valor},00 MT`,
                     sound: "default"
                 }, {
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 });
                 console.log("🔔 Pushcut enviado com sucesso");
             } catch (err) {
                 console.error("❌ Falha ao enviar Pushcut:", err.message);
             }
 
-            return res.json({ status: 'PAGO' });
-        } else if(status === 'FAILED' || status === 'REJECTED'){
-            transacao.status = 'FALHOU';
-            return res.json({ status: 'FALHOU' });
-        } else {
-            // Continua pendente
-            return res.json({ status: 'PENDENTE' });
+            res.send(`
+                <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <script>
+                            fbq('track', 'Purchase', {
+                                value: 297.00,
+                                currency: 'MZN'
+                            });
+                            setTimeout(() => {
+                                window.location.href = 'https://wa.me/message/5PVL4ECXMEWPI1';
+                            }, 2000);
+                        </script>
+                    </head>
+                    <body>
+                        <p>✅ Pagamento aprovado! Redirecionando para o seu produto final...</p>
+                    </body>
+                </html>
+            `);
+            return;
         }
-
-    } catch (err) {
-        console.error('Erro ao atualizar status:', err);
-        return res.status(500).json({ error: 'Erro interno' });
     }
+
+    res.sendStatus(200);
 });
 
 app.get('/health', (req, res) => {
