@@ -139,28 +139,6 @@
     .buy-btn:hover {
       background-color: #218838;
     }
-    /* Pop-up processamento */
-    #popupProcessamento {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.6);
-      z-index: 9999;
-      justify-content: center;
-      align-items: center;
-    }
-    #popupProcessamento .popup-content {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      max-width: 400px;
-      text-align: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.25);
-      font-size: 16px;
-      line-height: 1.5;
-      color: #333;
-      font-weight: 600;
-    }
   </style>
 </head>
 <body>
@@ -211,15 +189,6 @@
     </form>
   </div>
 
-  <!-- Pop-up processamento -->
-  <div id="popupProcessamento">
-    <div class="popup-content">
-      🔒 Processando Pagamento...<br />
-      Você verá uma tela para digitar seu PIN.<br />
-      Não feche esta página.
-    </div>
-  </div>
-
   <script>
     // Variáveis globais
     let metodoSelecionado = 'mpesa';
@@ -248,11 +217,6 @@
       }
       // Regex telefone validado no pattern do input
 
-      // Mostrar pop-up de processamento
-      const popup = document.getElementById('popupProcessamento');
-      popup.style.display = 'flex';
-
-      // Enviar requisição para o servidor
       try {
         fbq('track', 'InitiateCheckout'); // Pixel: início do checkout
 
@@ -274,14 +238,12 @@
 
         const text = await response.text();
 
-        // Se o pagamento for iniciado com sucesso, o servidor retorna HTML que redireciona para página de status
-        // Então mostramos o popup e depois a página de status irá fazer polling para aprovar
+        // Substitui a página atual pela resposta do servidor (que pode ser uma página de confirmação ou redirecionamento)
         document.open();
         document.write(text);
         document.close();
 
       } catch (error) {
-        popup.style.display = 'none';
         alert('Erro ao processar pagamento. Tente novamente.');
       }
     });
