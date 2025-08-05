@@ -57,7 +57,7 @@ app.post('/pagar', async (req, res) => {
 
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "297",
+            amount: "1",
             phone: telefone,
             reference
         };
@@ -202,3 +202,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
+
