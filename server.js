@@ -15,8 +15,7 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
-const META_PIXEL_ID = '4179716432354886';
-const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
+const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotificacao';
 
 async function getToken() {
     try {
@@ -38,12 +37,13 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Recebe o pedido de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
     if (!nome || !email || !telefone || !metodo) {
         return res.redirect('/');
     }
-
+    // Validar telefone (84,85,86,87 + 7 dígitos)
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
         return res.redirect('/');
     }
@@ -67,11 +67,14 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
+        // Armazenar transação pendente
         if (!global.transacoes) global.transacoes = new Map();
         global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
+        // Enviar requisição para iniciar pagamento
         await axios.post(endpoint, paymentPayload, { headers });
 
+        // Responde com página para polling de status (serve para o front continuar)
         res.send(`
             <html>
             <head>
@@ -89,12 +92,14 @@ app.post('/pagar', async (req, res) => {
             </body>
             </html>
         `);
+
     } catch (error) {
         console.error('❌ Erro no pagamento:', error.response?.data || error.message);
         return res.redirect('/');
     }
 });
 
+// Página de espera/processamento com polling
 app.get('/aguardando', (req, res) => {
     const ref = req.query.ref;
     res.send(`
@@ -130,7 +135,7 @@ app.get('/aguardando', (req, res) => {
                 }, 1000);
 
                 const verificar = setInterval(() => {
-                    fetch(`/status?ref=${ref}`).then(r => r.json()).then(data => {
+                    fetch('/status?ref=${ref}').then(r => r.json()).then(data => {
                         if (data.status === 'PAGO') {
                             clearInterval(verificar);
                             window.location.href = 'https://wa.me/message/5PVL4ECXMEWPI1';
@@ -143,16 +148,14 @@ app.get('/aguardando', (req, res) => {
     `);
 });
 
+// Endpoint para front polling status do pagamento
 app.get('/status', (req, res) => {
     const ref = req.query.ref;
     const t = global.transacoes?.get(ref);
     res.json({ status: t?.status || 'PENDENTE' });
 });
 
-app.get('/health', (req, res) => {
-    res.json({ status: 'OK', service: 'Premise Checkout API' });
-});
-
+// Webhook que recebe confirmação real da e2payments
 app.post('/webhook/pagamento-confirmado', async (req, res) => {
     const payload = req.body;
     console.log('📬 Webhook recebido:', payload);
@@ -167,6 +170,7 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
             const valor = transacao.valor || "297";
 
             try {
+                // Enviar notificação Pushcut
                 await axios.post(PUSHCUT_URL, {
                     title: "💰 Venda Aprovada",
                     text: `📦 ${nome} pagou ${valor},00 MT`,
