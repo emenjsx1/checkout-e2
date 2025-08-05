@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-MZ">
+<html lang="pt">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,21 +7,21 @@
 
   <!-- Meta Pixel Code -->
   <script>
-    !function(f,b,e,v,n,t,s){
-      if(f.fbq)return;n=f.fbq=function(){
-        n.callMethod?
-        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4179716432354886');
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '4179716432354886'); 
     fbq('track', 'PageView');
   </script>
   <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"
   /></noscript>
+  <!-- End Meta Pixel Code -->
 
   <style>
     body {
@@ -155,13 +155,12 @@
     .buy-btn:hover {
       background-color: #218838;
     }
-
   </style>
 </head>
 <body>
 
-  <div class="header-timer" id="header-timer">
-    Oferta expira em 09:00
+  <div class="header-timer">
+    Oferta expira em 00:09:56
   </div>
 
   <div class="container">
@@ -174,13 +173,13 @@
     </div>
 
     <div class="logo">
-      <img src="https://cdn.theorg.com/a8213f83-fb11-4807-9daf-161534a1b7d7_thumb.jpg">
+      <img src="https://cdn.theorg.com/a8213f83-fb11-4807-9daf-161534a1b7d7_thumb.jpg" alt="Logo do Produto" />
     </div>
 
     <div class="title">MÉTODO PREMISE</div>
-    <div class="price">5,00 MT</div>
+    <div class="price">297,00 MT</div>
 
-    <form method="POST" action="/pagar" onsubmit="fbq('track', 'InitiateCheckout')">
+    <form id="checkoutForm">
       <label for="nome">Nome completo</label>
       <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
 
@@ -189,19 +188,17 @@
 
       <label>Método de pagamento</label>
       <div class="payment-methods">
-        <button type="button" class="active" onclick="selecionarMetodo('mpesa', this)">📱 M-Pesa</button>
-        <button type="button" onclick="selecionarMetodo('emola', this)">📲 e-Mola</button>
+        <button type="button" class="active" data-method="mpesa">📱 M-Pesa</button>
+        <button type="button" data-method="emola">📲 e-Mola</button>
       </div>
 
-      <input type="hidden" id="metodo" name="metodo" value="mpesa" />
-
-      <label for="telefone">Número de pagamento</label>
-      <input type="text" id="telefone" name="telefone" placeholder="84xxxxxxx" required />
+      <label for="numero">Número de pagamento</label>
+      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required />
 
       <div class="details">
         <p><strong>Detalhes da compra</strong></p>
         <p>Método Premise</p>
-        <p><strong>Total:</strong> 5,00 MT</p>
+        <p><strong>Total:</strong> 297,00 MT</p>
       </div>
 
       <button type="submit" class="buy-btn">Comprar agora</button>
@@ -209,22 +206,90 @@
   </div>
 
   <script>
-    function selecionarMetodo(metodo, btn) {
-      document.getElementById('metodo').value = metodo;
-      document.querySelectorAll('.payment-methods button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    // Selecionar botões de método
+    const buttons = document.querySelectorAll('.payment-methods button');
+    let metodoSelecionado = 'mpesa';
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        metodoSelecionado = btn.getAttribute('data-method');
+      });
+    });
+
+    // Formulário
+    const form = document.getElementById('checkoutForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      fbq('track', 'InitiateCheckout'); // Pixel disparar evento
+
+      const formData = new URLSearchParams();
+      formData.append('nome', form.nome.value);
+      formData.append('email', form.email.value);
+      formData.append('telefone', form.numero.value);
+      formData.append('metodo', metodoSelecionado);
+
+      // Exibir popup de processamento
+      showProcessingPopup();
+
+      try {
+        const response = await fetch('/pagar', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+
+        const text = await response.text();
+        document.open();
+        document.write(text);
+        document.close();
+      } catch (err) {
+        alert('Erro ao processar pagamento. Tente novamente.');
+        location.reload();
+      }
+    });
+
+    // Popup de processamento
+    function showProcessingPopup() {
+      const popup = document.createElement('div');
+      popup.style.position = 'fixed';
+      popup.style.top = '0';
+      popup.style.left = '0';
+      popup.style.width = '100%';
+      popup.style.height = '100%';
+      popup.style.backgroundColor = 'rgba(0,0,0,0.5)';
+      popup.style.display = 'flex';
+      popup.style.justifyContent = 'center';
+      popup.style.alignItems = 'center';
+      popup.style.zIndex = '9999';
+
+      popup.innerHTML = `
+        <div style="background:white; padding:30px; border-radius:10px; max-width:400px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.2); font-family: Arial, sans-serif;">
+          <h2>🔒 Processando Pagamento...</h2>
+          <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
+          <div id="countdown" style="font-size: 24px; color: #333; margin-top: 15px;">60</div>
+        </div>
+      `;
+
+      document.body.appendChild(popup);
+
+      let seconds = 60;
+      const countdownEl = document.getElementById('countdown');
+
+      const interval = setInterval(() => {
+        seconds--;
+        countdownEl.textContent = seconds;
+        if(seconds <= 0){
+          clearInterval(interval);
+          countdownEl.textContent = "Verifique o seu telemóvel 📱 para concluir";
+        }
+      }, 1000);
     }
-
-    // Timer regressivo
-    let segundos = 540; // 9 minutos
-    const timer = document.getElementById("header-timer");
-
-    setInterval(() => {
-      const min = Math.floor(segundos / 60);
-      const sec = segundos % 60;
-      timer.textContent = `Oferta expira em ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
-      if (segundos > 0) segundos--;
-    }, 1000);
   </script>
 
 </body>
