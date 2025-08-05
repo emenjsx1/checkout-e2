@@ -51,11 +51,13 @@ app.post('/pagar', async (req, res) => {
         const token = await getToken();
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
         const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
+        const reference = `Premise${Date.now()}`;
+
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "297",
+            amount: "10",
             phone: telefone,
-            reference: `Premise${Date.now()}`
+            reference
         };
 
         const headers = {
@@ -64,7 +66,12 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        await axios.post(endpoint, paymentPayload, { headers });
+        // Enviar pagamento para e2payments
+        const paymentResponse = await axios.post(endpoint, paymentPayload, { headers });
+
+        // Armazenar transação em memória ou DB (aqui exemplo simples com Map)
+        if (!global.transacoes) global.transacoes = new Map();
+        global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
         res.send(`
             <html>
@@ -130,15 +137,23 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
     console.log('📬 Webhook recebido:', payload);
 
     if (payload.status === "SUCCESS") {
-        const nome = payload.name || "Cliente";
-        const valor = payload.amount || "5";
-        try {
-            await axios.post(PUSHCUT_URL, {
-                text: `✅ Venda Aprovada - ${nome} - ${valor},00 MT`
-            });
-            console.log("🔔 Pushcut enviado com sucesso");
-        } catch (err) {
-            console.error("❌ Falha ao enviar Pushcut:", err.message);
+        const reference = payload.reference;
+        const transacao = global.transacoes?.get(reference);
+
+        if (transacao) {
+            transacao.status = 'PAGO';
+
+            const nome = transacao.nome || "Cliente";
+            const valor = transacao.valor || "297";
+
+            try {
+                await axios.post(PUSHCUT_URL, {
+                    text: `✅ Venda Aprovada - ${nome} - ${valor},00 MT`
+                });
+                console.log("🔔 Pushcut enviado com sucesso");
+            } catch (err) {
+                console.error("❌ Falha ao enviar Pushcut:", err.message);
+            }
         }
     }
 
@@ -157,4 +172,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
-
