@@ -1,29 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Checkout Seguro - Método Premise</title>
-
-  <!-- Meta Pixel Code -->
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4179716432354886');
-    fbq('track', 'PageView');
-  </script>
-  <noscript>
-    <img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"/>
-  </noscript>
-  <!-- End Meta Pixel Code -->
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout Seguro</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -31,6 +12,7 @@
       margin: 0;
       padding: 0;
     }
+
     .header-timer {
       background-color: #d40000;
       color: white;
@@ -38,6 +20,7 @@
       font-weight: bold;
       padding: 10px;
     }
+
     .container {
       max-width: 400px;
       margin: 30px auto;
@@ -45,35 +28,36 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 20px;
-      position: relative;
     }
+
     .secure {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
     }
-    .secure img {
-      width: 20px;
-      margin-right: 8px;
-    }
+
     .country {
       text-align: right;
       font-size: 14px;
       margin-top: -20px;
       margin-bottom: 10px;
     }
+
     .logo {
       text-align: center;
     }
+
     .logo img {
       width: 60px;
     }
+
     .title {
       text-align: center;
       font-weight: bold;
       margin-top: 10px;
       font-size: 18px;
     }
+
     .price {
       text-align: center;
       color: #0077cc;
@@ -81,12 +65,14 @@
       font-weight: bold;
       margin-bottom: 15px;
     }
+
     label {
       display: block;
       margin-top: 10px;
       margin-bottom: 5px;
       font-weight: bold;
     }
+
     input[type="text"],
     input[type="email"] {
       width: 100%;
@@ -95,11 +81,13 @@
       border-radius: 6px;
       font-size: 14px;
     }
+
     .payment-methods {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
     }
+
     .payment-methods button {
       flex: 1;
       padding: 10px;
@@ -109,21 +97,21 @@
       cursor: pointer;
       border-radius: 6px;
       font-weight: bold;
-      user-select: none;
     }
+
     .payment-methods button:last-child {
       margin-right: 0;
     }
+
     .payment-methods .active {
       border-color: #d40000;
       background-color: #ffd6d6;
     }
+
     .details {
       margin-top: 20px;
     }
-    .details p {
-      margin: 5px 0;
-    }
+
     .buy-btn {
       margin-top: 20px;
       background-color: #28a745;
@@ -136,8 +124,35 @@
       cursor: pointer;
       font-weight: bold;
     }
+
     .buy-btn:hover {
       background-color: #218838;
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #popup .modal {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
@@ -152,12 +167,10 @@
       <span>✅ COMPRA 100% SEGURA</span>
     </div>
 
-    <div class="country">
-      🇲🇿 Moçambique
-    </div>
+    <div class="country">🇲🇿 Moçambique</div>
 
     <div class="logo">
-      <img src="https://cdn.theorg.com/a8213f83-fb11-4807-9daf-161534a1b7d7_thumb.jpg" alt="Logo do Produto" />
+      <img src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/3:2/w_2560%2Cc_limit/google-logo.jpg" alt="Logo do Produto">
     </div>
 
     <div class="title">MÉTODO PREMISE</div>
@@ -172,12 +185,12 @@
 
       <label>Método de pagamento</label>
       <div class="payment-methods">
-        <button type="button" class="active" data-metodo="mpesa">📱 M-Pesa</button>
+        <button type="button" data-metodo="mpesa" class="active">📱 M-Pesa</button>
         <button type="button" data-metodo="emola">📲 e-Mola</button>
       </div>
 
       <label for="numero">Número de pagamento</label>
-      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required pattern="^(84|85|86|87)\d{7}$" />
+      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required />
 
       <div class="details">
         <p><strong>Detalhes da compra</strong></p>
@@ -189,65 +202,69 @@
     </form>
   </div>
 
-  <script>
-    // Variáveis globais
-    let metodoSelecionado = 'mpesa';
+  <div id="popup">
+    <div class="modal">
+      <h3>🔐 Aguarde...</h3>
+      <p>Você receberá um pedido no seu telemóvel.</p>
+      <p>Digite o PIN e aguarde a confirmação.</p>
+      <p id="contador">Fechando em 10s...</p>
+    </div>
+  </div>
 
-    // Selecionar botões e adicionar eventos para mudar método
-    document.querySelectorAll('.payment-methods button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.payment-methods button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        metodoSelecionado = btn.getAttribute('data-metodo');
+  <script>
+    const metodoBtns = document.querySelectorAll(".payment-methods button");
+    let metodoSelecionado = "mpesa";
+
+    metodoBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        metodoBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        metodoSelecionado = btn.dataset.metodo;
       });
     });
 
-    // Form submit
-    document.getElementById('formPagamento').addEventListener('submit', async (e) => {
+    document.getElementById("formPagamento").addEventListener("submit", async function(e) {
       e.preventDefault();
 
-      // Validar inputs
-      const nome = document.getElementById('nome').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const telefone = document.getElementById('numero').value.trim();
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("numero").value;
 
-      if (!nome || !email || !telefone) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-      // Regex telefone validado no pattern do input
+      const popup = document.getElementById("popup");
+      popup.style.display = "flex";
+
+      let tempo = 10;
+      const interval = setInterval(() => {
+        document.getElementById("contador").innerText = `Fechando em ${tempo--}s...`;
+        if (tempo < 0) clearInterval(interval);
+      }, 1000);
 
       try {
-        fbq('track', 'InitiateCheckout'); // Pixel: início do checkout
-
-        const formData = new URLSearchParams();
-        formData.append('nome', nome);
-        formData.append('email', email);
-        formData.append('telefone', telefone);
-        formData.append('metodo', metodoSelecionado);
-
-        const response = await fetch('/pagar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: formData.toString()
+        const res = await fetch("/pagar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            nome,
+            email,
+            telefone,
+            metodo: metodoSelecionado
+          })
         });
 
-        if (!response.ok) {
-          throw new Error('Erro na resposta do servidor');
+        const html = await res.text();
+        if (res.status === 200) {
+          window.location.href = "https://wa.me/message/5PVL4ECXMEWPI1";
+        } else {
+          popup.style.display = "none";
+          document.body.innerHTML = html;
         }
-
-        const text = await response.text();
-
-        // Substitui a página atual pela resposta do servidor (que pode ser uma página de confirmação ou redirecionamento)
-        document.open();
-        document.write(text);
-        document.close();
-
       } catch (error) {
-        alert('Erro ao processar pagamento. Tente novamente.');
+        popup.style.display = "none";
+        alert("Erro ao processar pagamento. Tente novamente.");
       }
     });
   </script>
-
 </body>
 </html>
