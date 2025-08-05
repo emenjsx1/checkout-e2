@@ -16,7 +16,6 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
 const META_PIXEL_ID = '4179716432354886';
-
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
 async function getToken() {
@@ -77,62 +76,81 @@ app.post('/pagar', async (req, res) => {
             <html>
             <head>
                 <meta charset="UTF-8" />
-                <title>Processando Pagamento</title>
+                <title>Pagamento Iniciado</title>
                 <script>
                     fbq('track', 'InitiateCheckout');
-                </script>
-                <style>
-                    body {
-                        font-family: sans-serif;
-                        background: #f4f4f4;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100vh;
-                        margin: 0;
-                    }
-                    .popup {
-                        background: white;
-                        padding: 30px;
-                        border-radius: 10px;
-                        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-                        text-align: center;
-                        max-width: 400px;
-                    }
-                    .countdown {
-                        font-size: 24px;
-                        color: #333;
-                        margin-top: 15px;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="popup">
-                    <h2>🔒 Processando Pagamento...</h2>
-                    <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
-                    <div class="countdown" id="countdown">180</div>
-                </div>
-
-                <script>
-                    let seconds = 180;
-                    const countdown = document.getElementById('countdown');
-                    const interval = setInterval(() => {
-                        seconds--;
-                        countdown.textContent = seconds;
-                        if (seconds <= 0) {
-                            clearInterval(interval);
-                            countdown.textContent = "⚠️ Parece que o pagamento não foi concluído. Tente novamente.";
-                        }
+                    setTimeout(() => {
+                        window.location.href = '/aguardando?ref=${reference}';
                     }, 1000);
                 </script>
+            </head>
+            <body>
+                <p>🔄 Iniciando pagamento...</p>
             </body>
             </html>
         `);
-
     } catch (error) {
         console.error('❌ Erro no pagamento:', error.response?.data || error.message);
         return res.redirect('/');
     }
+});
+
+app.get('/aguardando', (req, res) => {
+    const ref = req.query.ref;
+    res.send(`
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Processando Pagamento</title>
+            <style>
+                body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+                .popup { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: center; max-width: 400px; }
+                .countdown { font-size: 24px; color: #333; margin-top: 15px; }
+            </style>
+        </head>
+        <body>
+            <div class="popup">
+                <h2>🔒 Processando Pagamento...</h2>
+                <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
+                <div class="countdown" id="countdown">180</div>
+                <p id="mensagem"></p>
+            </div>
+            <script>
+                let segundos = 180;
+                let countdown = document.getElementById('countdown');
+                let mensagem = document.getElementById('mensagem');
+
+                const intervalo = setInterval(() => {
+                    segundos--;
+                    countdown.textContent = segundos;
+                    if (segundos <= 0) {
+                        clearInterval(intervalo);
+                        mensagem.innerHTML = '⚠️ Pagamento não foi concluído.<br><a href="/">Tentar novamente</a>';
+                    }
+                }, 1000);
+
+                const verificar = setInterval(() => {
+                    fetch(`/status?ref=${ref}`).then(r => r.json()).then(data => {
+                        if (data.status === 'PAGO') {
+                            clearInterval(verificar);
+                            window.location.href = 'https://wa.me/message/5PVL4ECXMEWPI1';
+                        }
+                    });
+                }, 5000);
+            </script>
+        </body>
+        </html>
+    `);
+});
+
+app.get('/status', (req, res) => {
+    const ref = req.query.ref;
+    const t = global.transacoes?.get(ref);
+    res.json({ status: t?.status || 'PENDENTE' });
+});
+
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', service: 'Premise Checkout API' });
 });
 
 app.post('/webhook/pagamento-confirmado', async (req, res) => {
@@ -145,7 +163,6 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
 
         if (transacao) {
             transacao.status = 'PAGO';
-
             const nome = transacao.nome || "Cliente";
             const valor = transacao.valor || "297";
 
@@ -155,24 +172,16 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
                     text: `📦 ${nome} pagou ${valor},00 MT`,
                     sound: "default"
                 }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
+                    headers: { 'Content-Type': 'application/json' }
                 });
                 console.log("🔔 Pushcut enviado com sucesso");
             } catch (err) {
                 console.error("❌ Falha ao enviar Pushcut:", err.message);
             }
-
-            return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
         }
     }
 
     res.sendStatus(200);
-});
-
-app.get('/health', (req, res) => {
-    res.json({ status: 'OK', service: 'Premise Checkout API' });
 });
 
 app.use('*', (req, res) => {
