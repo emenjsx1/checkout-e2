@@ -6,18 +6,20 @@ const path = require('path');
 
 const app = express();
 
+// Middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
+// Configurações
 const BASE_URL = 'https://e2payments.explicador.co.mz';
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const WALLET_MPESA = process.env.WALLET_MPESA;
-const WALLET_EMOLA = process.env.WALLET_EMOLA;
-const META_PIXEL_ID = '4179716432354886';
+const CLIENT_ID = process.env.CLIENT_ID || '9f86fd97-60ee-4776-b05e-dda0797f9c32';
+const CLIENT_SECRET = process.env.CLIENT_SECRET || '94haNPqlHOcsG3jRHqsEQyTTgVCXOaUf88CPDC0F';
+const WALLET_MPESA = process.env.WALLET_MPESA || '993607';
+const WALLET_EMOLA = process.env.WALLET_EMOLA || '993606';
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
+// Função para obter token
 async function getToken() {
     try {
         const response = await axios.post(`${BASE_URL}/oauth/token`, {
@@ -25,39 +27,45 @@ async function getToken() {
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET
         }, {
-            headers: { 'Content-Type': 'application/json' }
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
         });
         return response.data.access_token;
     } catch (error) {
-        console.error('❌ Erro ao obter token:', error.response?.data || error.message);
+        console.error('Erro ao obter token:', error.response?.data || error.message);
         throw new Error('Falha na autenticação');
     }
 }
 
+// Página principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Rota de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
+
     if (!nome || !email || !telefone || !metodo) {
-        return res.redirect('/');
+        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
     }
 
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.redirect('/');
+        return res.status(400).json({ erro: 'Número inválido.' });
     }
 
     try {
         const token = await getToken();
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
-        const reference = `Premise${Date.now()}`;
 
-        const paymentPayload = {
+        const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
+        const payload = {
             client_id: CLIENT_ID,
-            amount: "1",
+            amount: "10",
             phone: telefone,
-            reference
+            reference: `Premise${Date.now()}`
         };
 
         const headers = {
@@ -66,65 +74,32 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        if (!global.transacoes) global.transacoes = new Map();
-        global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
+        const response = await axios.post(endpoint, payload, { headers });
 
-        await axios.post(`${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`, paymentPayload, { headers });
+        // Envia notificação Pushcut
+        await axios.post(PUSHCUT_URL, {
+            text: `💰 Venda aprovada - ${nome}`,
+            title: 'Pagamento Iniciado'
+        });
 
         res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
     } catch (error) {
-        console.error('❌ Erro no pagamento:', error.response?.data || error.message);
-        return res.redirect('/');
+        console.error('Erro no pagamento:', error.response?.data || error.message);
+        res.status(500).send('Erro ao processar o pagamento.');
     }
 });
 
-app.post('/webhook/pagamento-confirmado', async (req, res) => {
-    const payload = req.body;
-    console.log('📬 Webhook recebido:', payload);
-
-    if (payload.status === "SUCCESS") {
-        const reference = payload.reference;
-        const transacao = global.transacoes?.get(reference);
-
-        if (transacao) {
-            transacao.status = 'PAGO';
-            const nome = transacao.nome || "Cliente";
-            const valor = transacao.valor || "297";
-
-            try {
-                await axios.post(PUSHCUT_URL, {
-                    title: "💰 Venda Aprovada",
-                    text: `📦 ${nome} pagou ${valor},00 MT`,
-                    sound: "default"
-                }, {
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                console.log("🔔 Pushcut enviado com sucesso");
-            } catch (err) {
-                console.error("❌ Falha ao enviar Pushcut:", err.message);
-            }
-        }
-    }
-
-    res.sendStatus(200);
-});
-
-app.get('/status', (req, res) => {
-    const ref = req.query.ref;
-    const t = global.transacoes?.get(ref);
-    res.json({ status: t?.status || 'PENDENTE' });
-});
-
+// Health check
 app.get('/health', (req, res) => {
-    res.json({ status: 'OK', service: 'Premise Checkout API' });
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// 404
 app.use('*', (req, res) => {
-    res.status(404).send('Página não encontrada.');
+    res.status(404).send('Página não encontrada');
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
-
