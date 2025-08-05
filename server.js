@@ -78,17 +78,18 @@ app.post('/pagar', async (req, res) => {
 
         // Envia notificação Pushcut
         await axios.post(PUSHCUT_URL, {
-            text: `💰 Venda aprovada - ${nome}`,
-            title: 'Pagamento Iniciado'
+            text: `${nome} pagou ${valor},00 MT`,
+            title: '💰 Venda aprovada'
         });
 
         res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
-    } catch (error) {
-        console.error('Erro no pagamento:', error.response?.data || error.message);
-        res.status(500).send('Erro ao processar o pagamento.');
+  } catch (error) {
+        console.error('❌ Erro no pagamento, mas redirecionando mesmo assim:', error.response?.data || error.message);
     }
-});
 
+    // Redirecionar para o WhatsApp independentemente do erro
+    return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
+});
 // Health check
 app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -103,3 +104,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
