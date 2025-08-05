@@ -2,8 +2,8 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout Seguro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout Seguro - Método Premise</title>
 
   <!-- Meta Pixel Code -->
   <script>
@@ -15,12 +15,13 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4179716432354886'); 
+    fbq('init', '4179716432354886');
     fbq('track', 'PageView');
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"
-  /></noscript>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"/>
+  </noscript>
   <!-- End Meta Pixel Code -->
 
   <style>
@@ -30,7 +31,6 @@
       margin: 0;
       padding: 0;
     }
-
     .header-timer {
       background-color: #d40000;
       color: white;
@@ -38,7 +38,6 @@
       font-weight: bold;
       padding: 10px;
     }
-
     .container {
       max-width: 400px;
       margin: 30px auto;
@@ -46,41 +45,35 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 20px;
+      position: relative;
     }
-
     .secure {
       display: flex;
       align-items: center;
       margin-bottom: 10px;
     }
-
     .secure img {
       width: 20px;
       margin-right: 8px;
     }
-
     .country {
       text-align: right;
       font-size: 14px;
       margin-top: -20px;
       margin-bottom: 10px;
     }
-
     .logo {
       text-align: center;
     }
-
     .logo img {
       width: 60px;
     }
-
     .title {
       text-align: center;
       font-weight: bold;
       margin-top: 10px;
       font-size: 18px;
     }
-
     .price {
       text-align: center;
       color: #0077cc;
@@ -88,14 +81,12 @@
       font-weight: bold;
       margin-bottom: 15px;
     }
-
     label {
       display: block;
       margin-top: 10px;
       margin-bottom: 5px;
       font-weight: bold;
     }
-
     input[type="text"],
     input[type="email"] {
       width: 100%;
@@ -104,13 +95,11 @@
       border-radius: 6px;
       font-size: 14px;
     }
-
     .payment-methods {
       display: flex;
       justify-content: space-between;
       margin-top: 10px;
     }
-
     .payment-methods button {
       flex: 1;
       padding: 10px;
@@ -120,25 +109,21 @@
       cursor: pointer;
       border-radius: 6px;
       font-weight: bold;
+      user-select: none;
     }
-
     .payment-methods button:last-child {
       margin-right: 0;
     }
-
     .payment-methods .active {
       border-color: #d40000;
       background-color: #ffd6d6;
     }
-
     .details {
       margin-top: 20px;
     }
-
     .details p {
       margin: 5px 0;
     }
-
     .buy-btn {
       margin-top: 20px;
       background-color: #28a745;
@@ -151,9 +136,30 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     .buy-btn:hover {
       background-color: #218838;
+    }
+    /* Pop-up processamento */
+    #popupProcessamento {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.6);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+    #popupProcessamento .popup-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.25);
+      font-size: 16px;
+      line-height: 1.5;
+      color: #333;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -179,7 +185,7 @@
     <div class="title">MÉTODO PREMISE</div>
     <div class="price">297,00 MT</div>
 
-    <form id="checkoutForm">
+    <form id="formPagamento">
       <label for="nome">Nome completo</label>
       <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
 
@@ -188,12 +194,12 @@
 
       <label>Método de pagamento</label>
       <div class="payment-methods">
-        <button type="button" class="active" data-method="mpesa">📱 M-Pesa</button>
-        <button type="button" data-method="emola">📲 e-Mola</button>
+        <button type="button" class="active" data-metodo="mpesa">📱 M-Pesa</button>
+        <button type="button" data-metodo="emola">📲 e-Mola</button>
       </div>
 
       <label for="numero">Número de pagamento</label>
-      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required />
+      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required pattern="^(84|85|86|87)\d{7}$" />
 
       <div class="details">
         <p><strong>Detalhes da compra</strong></p>
@@ -205,91 +211,80 @@
     </form>
   </div>
 
+  <!-- Pop-up processamento -->
+  <div id="popupProcessamento">
+    <div class="popup-content">
+      🔒 Processando Pagamento...<br />
+      Você verá uma tela para digitar seu PIN.<br />
+      Não feche esta página.
+    </div>
+  </div>
+
   <script>
-    // Selecionar botões de método
-    const buttons = document.querySelectorAll('.payment-methods button');
+    // Variáveis globais
     let metodoSelecionado = 'mpesa';
 
-    buttons.forEach(btn => {
+    // Selecionar botões e adicionar eventos para mudar método
+    document.querySelectorAll('.payment-methods button').forEach(btn => {
       btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.payment-methods button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        metodoSelecionado = btn.getAttribute('data-method');
+        metodoSelecionado = btn.getAttribute('data-metodo');
       });
     });
 
-    // Formulário
-    const form = document.getElementById('checkoutForm');
-
-    form.addEventListener('submit', async (e) => {
+    // Form submit
+    document.getElementById('formPagamento').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      fbq('track', 'InitiateCheckout'); // Pixel disparar evento
+      // Validar inputs
+      const nome = document.getElementById('nome').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const telefone = document.getElementById('numero').value.trim();
 
-      const formData = new URLSearchParams();
-      formData.append('nome', form.nome.value);
-      formData.append('email', form.email.value);
-      formData.append('telefone', form.numero.value);
-      formData.append('metodo', metodoSelecionado);
+      if (!nome || !email || !telefone) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+      // Regex telefone validado no pattern do input
 
-      // Exibir popup de processamento
-      showProcessingPopup();
+      // Mostrar pop-up de processamento
+      const popup = document.getElementById('popupProcessamento');
+      popup.style.display = 'flex';
 
+      // Enviar requisição para o servidor
       try {
+        fbq('track', 'InitiateCheckout'); // Pixel: início do checkout
+
+        const formData = new URLSearchParams();
+        formData.append('nome', nome);
+        formData.append('email', email);
+        formData.append('telefone', telefone);
+        formData.append('metodo', metodoSelecionado);
+
         const response = await fetch('/pagar', {
           method: 'POST',
-          body: formData,
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: formData.toString()
         });
 
+        if (!response.ok) {
+          throw new Error('Erro na resposta do servidor');
+        }
+
         const text = await response.text();
+
+        // Se o pagamento for iniciado com sucesso, o servidor retorna HTML que redireciona para página de status
+        // Então mostramos o popup e depois a página de status irá fazer polling para aprovar
         document.open();
         document.write(text);
         document.close();
-      } catch (err) {
+
+      } catch (error) {
+        popup.style.display = 'none';
         alert('Erro ao processar pagamento. Tente novamente.');
-        location.reload();
       }
     });
-
-    // Popup de processamento
-    function showProcessingPopup() {
-      const popup = document.createElement('div');
-      popup.style.position = 'fixed';
-      popup.style.top = '0';
-      popup.style.left = '0';
-      popup.style.width = '100%';
-      popup.style.height = '100%';
-      popup.style.backgroundColor = 'rgba(0,0,0,0.5)';
-      popup.style.display = 'flex';
-      popup.style.justifyContent = 'center';
-      popup.style.alignItems = 'center';
-      popup.style.zIndex = '9999';
-
-      popup.innerHTML = `
-        <div style="background:white; padding:30px; border-radius:10px; max-width:400px; text-align:center; box-shadow:0 0 10px rgba(0,0,0,0.2); font-family: Arial, sans-serif;">
-          <h2>🔒 Processando Pagamento...</h2>
-          <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
-          <div id="countdown" style="font-size: 24px; color: #333; margin-top: 15px;">60</div>
-        </div>
-      `;
-
-      document.body.appendChild(popup);
-
-      let seconds = 60;
-      const countdownEl = document.getElementById('countdown');
-
-      const interval = setInterval(() => {
-        seconds--;
-        countdownEl.textContent = seconds;
-        if(seconds <= 0){
-          clearInterval(interval);
-          countdownEl.textContent = "Verifique o seu telemóvel 📱 para concluir";
-        }
-      }, 1000);
-    }
   </script>
 
 </body>
