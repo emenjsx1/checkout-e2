@@ -225,7 +225,7 @@
       <h3>🔐 Aguarde...</h3>
       <p>Você receberá um pedido no seu telemóvel.</p>
       <p>Digite o PIN e aguarde a confirmação.</p>
-      <p id="contador">Fechando em 30s...</p>
+      <p id="contador">Fechando em 180s...</p>
     </div>
   </div>
 
@@ -251,7 +251,7 @@
       const popup = document.getElementById("popup");
       popup.style.display = "flex";
 
-      let tempo = 30;
+      let tempo = 180;
       const interval = setInterval(() => {
         document.getElementById("contador").innerText = `Fechando em ${tempo--}s...`;
         if (tempo < 0) clearInterval(interval);
