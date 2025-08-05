@@ -17,7 +17,7 @@ const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
 
 // URL do Pushcut para iPhone (Iuphone)
-const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotificação';
+const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
 async function getToken() {
     try {
@@ -172,3 +172,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
+
