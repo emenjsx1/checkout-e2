@@ -15,6 +15,8 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
+
+// URL do Pushcut para iPhone (Iuphone)
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotificação';
 
 async function getToken() {
@@ -55,7 +57,7 @@ app.post('/pagar', async (req, res) => {
 
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "10",
+            amount: "5",
             phone: telefone,
             reference
         };
@@ -66,12 +68,10 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        // Enviar pagamento para e2payments
-        const paymentResponse = await axios.post(endpoint, paymentPayload, { headers });
-
-        // Armazenar transação em memória ou DB (aqui exemplo simples com Map)
         if (!global.transacoes) global.transacoes = new Map();
         global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
+
+        await axios.post(endpoint, paymentPayload, { headers });
 
         res.send(`
             <html>
