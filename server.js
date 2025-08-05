@@ -6,20 +6,17 @@ const path = require('path');
 
 const app = express();
 
-// Middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
 
-// Configurações
 const BASE_URL = 'https://e2payments.explicador.co.mz';
-const CLIENT_ID = process.env.CLIENT_ID || '9f86fd97-60ee-4776-b05e-dda0797f9c32';
-const CLIENT_SECRET = process.env.CLIENT_SECRET || '94haNPqlHOcsG3jRHqsEQyTTgVCXOaUf88CPDC0F';
-const WALLET_MPESA = process.env.WALLET_MPESA || '993607';
-const WALLET_EMOLA = process.env.WALLET_EMOLA || '993606';
-const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const WALLET_MPESA = process.env.WALLET_MPESA;
+const WALLET_EMOLA = process.env.WALLET_EMOLA;
+const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotificação';
 
-// Função para obter token
 async function getToken() {
     try {
         const response = await axios.post(`${BASE_URL}/oauth/token`, {
@@ -27,43 +24,36 @@ async function getToken() {
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET
         }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
         });
         return response.data.access_token;
     } catch (error) {
-        console.error('Erro ao obter token:', error.response?.data || error.message);
+        console.error('❌ Erro ao obter token:', error.response?.data || error.message);
         throw new Error('Falha na autenticação');
     }
 }
 
-// Página principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Rota de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
-
     if (!nome || !email || !telefone || !metodo) {
-        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
+        return res.redirect('/');
     }
 
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.status(400).json({ erro: 'Número inválido.' });
+        return res.redirect('/');
     }
 
     try {
         const token = await getToken();
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
-
         const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
-        const payload = {
+        const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "10",
+            amount: "297",
             phone: telefone,
             reference: `Premise${Date.now()}`
         };
@@ -74,33 +64,96 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        const response = await axios.post(endpoint, payload, { headers });
+        await axios.post(endpoint, paymentPayload, { headers });
 
-        // Envia notificação Pushcut
-        await axios.post(PUSHCUT_URL, {
-            text: `💰 Venda aprovada - ${nome}`,
-            title: 'Pagamento Iniciado'
-        });
+        res.send(`
+            <html>
+            <head>
+                <meta charset="UTF-8" />
+                <title>Aguarde</title>
+                <style>
+                    body {
+                        font-family: sans-serif;
+                        background: #f4f4f4;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        margin: 0;
+                    }
+                    .popup {
+                        background: white;
+                        padding: 30px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+                        text-align: center;
+                        max-width: 400px;
+                    }
+                    .countdown {
+                        font-size: 24px;
+                        color: #333;
+                        margin-top: 15px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="popup">
+                    <h2>🔒 Aguarde...</h2>
+                    <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
+                    <div class="countdown" id="countdown">180</div>
+                </div>
 
-        res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
+                <script>
+                    let seconds = 180;
+                    const countdown = document.getElementById('countdown');
+                    const interval = setInterval(() => {
+                        seconds--;
+                        countdown.textContent = seconds;
+                        if (seconds <= 0) {
+                            clearInterval(interval);
+                            countdown.textContent = "Agora verifique seu telemóvel 📱";
+                        }
+                    }, 1000);
+                </script>
+            </body>
+            </html>
+        `);
+
     } catch (error) {
-        console.error('Erro no pagamento:', error.response?.data || error.message);
-        res.status(500).send('Erro ao processar o pagamento.');
+        console.error('❌ Erro no pagamento:', error.response?.data || error.message);
+        return res.redirect('/');
     }
 });
 
-// Health check
-app.get('/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+app.post('/webhook/pagamento-confirmado', async (req, res) => {
+    const payload = req.body;
+    console.log('📬 Webhook recebido:', payload);
+
+    if (payload.status === "SUCCESS") {
+        const nome = payload.name || "Cliente";
+        const valor = payload.amount || "297";
+        try {
+            await axios.post(PUSHCUT_URL, {
+                text: `✅ Venda Aprovada - ${nome} - ${valor},00 MT`
+            });
+            console.log("🔔 Pushcut enviado com sucesso");
+        } catch (err) {
+            console.error("❌ Falha ao enviar Pushcut:", err.message);
+        }
+    }
+
+    res.sendStatus(200);
 });
 
-// 404
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', service: 'Premise Checkout API' });
+});
+
 app.use('*', (req, res) => {
-    res.status(404).send('Página não encontrada');
+    res.status(404).send('Página não encontrada.');
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
-
