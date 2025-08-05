@@ -62,7 +62,7 @@ app.post('/pagar', async (req, res) => {
 
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "297",
+            amount: "1",
             phone: telefone,
             reference
         };
@@ -78,14 +78,7 @@ app.post('/pagar', async (req, res) => {
 
         await axios.post(`${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`, paymentPayload, { headers });
 
-    } catch (error) {
-        console.error('❌ Erro no pagamento, mas redirecionando mesmo assim:', error.response?.data || error.message);
-    }
-
-    // Redirecionar para o WhatsApp independentemente do erro
-    return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
-});
-        // Envia notificação Pushcut
+            // Envia notificação Pushcut
         await axios.post(PUSHCUT_URL, {
             text: `${nome} pagou 297,00 MT por ${metodo}`,
             title: '💰 Venda aprovada'
@@ -113,6 +106,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
 
