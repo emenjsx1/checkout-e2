@@ -121,7 +121,7 @@ app.post('/pagar', async (req, res) => {
                         countdown.textContent = seconds;
                         if (seconds <= 0) {
                             clearInterval(interval);
-                            countdown.textContent = "Verifique o seu telemóvel 📱 para concluir";
+                            countdown.textContent = "⚠️ Parece que o pagamento não foi concluído. Tente novamente.";
                         }
                     }, 1000);
                 </script>
@@ -164,26 +164,7 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
                 console.error("❌ Falha ao enviar Pushcut:", err.message);
             }
 
-            res.send(`
-                <html>
-                    <head>
-                        <meta charset="UTF-8">
-                        <script>
-                            fbq('track', 'Purchase', {
-                                value: 297.00,
-                                currency: 'MZN'
-                            });
-                            setTimeout(() => {
-                                window.location.href = 'https://wa.me/message/5PVL4ECXMEWPI1';
-                            }, 2000);
-                        </script>
-                    </head>
-                    <body>
-                        <p>✅ Pagamento aprovado! Redirecionando para o seu produto final...</p>
-                    </body>
-                </html>
-            `);
-            return;
+            return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
         }
     }
 
