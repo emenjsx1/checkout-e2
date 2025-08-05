@@ -131,7 +131,7 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
 
     if (payload.status === "SUCCESS") {
         const nome = payload.name || "Cliente";
-        const valor = payload.amount || "297";
+        const valor = payload.amount || "5";
         try {
             await axios.post(PUSHCUT_URL, {
                 text: `✅ Venda Aprovada - ${nome} - ${valor},00 MT`
@@ -157,3 +157,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
+
