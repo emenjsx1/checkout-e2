@@ -1,10 +1,28 @@
-
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-MZ">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Checkout Seguro</title>
+
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s){
+      if(f.fbq)return;n=f.fbq=function(){
+        n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '4179716432354886');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"
+  /></noscript>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -34,6 +52,11 @@
       display: flex;
       align-items: center;
       margin-bottom: 10px;
+    }
+
+    .secure img {
+      width: 20px;
+      margin-right: 8px;
     }
 
     .country {
@@ -112,6 +135,10 @@
       margin-top: 20px;
     }
 
+    .details p {
+      margin: 5px 0;
+    }
+
     .buy-btn {
       margin-top: 20px;
       background-color: #28a745;
@@ -129,37 +156,12 @@
       background-color: #218838;
     }
 
-    #popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-
-    #popup .modal {
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      text-align: center;
-      max-width: 300px;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
   </style>
 </head>
 <body>
 
-  <div class="header-timer">
-    Oferta expira em 00:09:56
+  <div class="header-timer" id="header-timer">
+    Oferta expira em 09:00
   </div>
 
   <div class="container">
@@ -167,16 +169,18 @@
       <span>✅ COMPRA 100% SEGURA</span>
     </div>
 
-    <div class="country">🇲🇿 Moçambique</div>
+    <div class="country">
+      🇲🇿 Moçambique
+    </div>
 
     <div class="logo">
-      <img src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/3:2/w_2560%2Cc_limit/google-logo.jpg" alt="Logo do Produto">
+      <img src="https://via.placeholder.com/60x60" alt="Logo do Produto">
     </div>
 
     <div class="title">MÉTODO PREMISE</div>
-    <div class="price">1,00 MT</div>
+    <div class="price">297,00 MT</div>
 
-    <form id="formPagamento">
+    <form method="POST" action="/pagar" onsubmit="fbq('track', 'InitiateCheckout')">
       <label for="nome">Nome completo</label>
       <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
 
@@ -185,12 +189,14 @@
 
       <label>Método de pagamento</label>
       <div class="payment-methods">
-        <button type="button" data-metodo="mpesa" class="active">📱 M-Pesa</button>
-        <button type="button" data-metodo="emola">📲 e-Mola</button>
+        <button type="button" class="active" onclick="selecionarMetodo('mpesa', this)">📱 M-Pesa</button>
+        <button type="button" onclick="selecionarMetodo('emola', this)">📲 e-Mola</button>
       </div>
 
-      <label for="numero">Número de pagamento</label>
-      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required />
+      <input type="hidden" id="metodo" name="metodo" value="mpesa" />
+
+      <label for="telefone">Número de pagamento</label>
+      <input type="text" id="telefone" name="telefone" placeholder="84xxxxxxx" required />
 
       <div class="details">
         <p><strong>Detalhes da compra</strong></p>
@@ -202,69 +208,24 @@
     </form>
   </div>
 
-  <div id="popup">
-    <div class="modal">
-      <h3>🔐 Aguarde...</h3>
-      <p>Você receberá um pedido no seu telemóvel.</p>
-      <p>Digite o PIN e aguarde a confirmação.</p>
-      <p id="contador">Fechando em 10s...</p>
-    </div>
-  </div>
-
   <script>
-    const metodoBtns = document.querySelectorAll(".payment-methods button");
-    let metodoSelecionado = "mpesa";
+    function selecionarMetodo(metodo, btn) {
+      document.getElementById('metodo').value = metodo;
+      document.querySelectorAll('.payment-methods button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
 
-    metodoBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        metodoBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        metodoSelecionado = btn.dataset.metodo;
-      });
-    });
+    // Timer regressivo
+    let segundos = 540; // 9 minutos
+    const timer = document.getElementById("header-timer");
 
-    document.getElementById("formPagamento").addEventListener("submit", async function(e) {
-      e.preventDefault();
-
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email").value;
-      const telefone = document.getElementById("numero").value;
-
-      const popup = document.getElementById("popup");
-      popup.style.display = "flex";
-
-      let tempo = 10;
-      const interval = setInterval(() => {
-        document.getElementById("contador").innerText = `Fechando em ${tempo--}s...`;
-        if (tempo < 0) clearInterval(interval);
-      }, 1000);
-
-      try {
-        const res = await fetch("/pagar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            nome,
-            email,
-            telefone,
-            metodo: metodoSelecionado
-          })
-        });
-
-        const html = await res.text();
-        if (res.status === 200) {
-          window.location.href = "https://wa.me/message/5PVL4ECXMEWPI1";
-        } else {
-          popup.style.display = "none";
-          document.body.innerHTML = html;
-        }
-      } catch (error) {
-        popup.style.display = "none";
-        alert("Erro ao processar pagamento. Tente novamente.");
-      }
-    });
+    setInterval(() => {
+      const min = Math.floor(segundos / 60);
+      const sec = segundos % 60;
+      timer.textContent = `Oferta expira em ${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      if (segundos > 0) segundos--;
+    }, 1000);
   </script>
+
 </body>
 </html>
