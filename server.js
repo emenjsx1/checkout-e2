@@ -62,7 +62,7 @@ app.post('/pagar', async (req, res) => {
 
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "1",
+            amount: "300",
             phone: telefone,
             reference
         };
@@ -80,7 +80,7 @@ app.post('/pagar', async (req, res) => {
 
             // Envia notificação Pushcut
         await axios.post(PUSHCUT_URL, {
-            text: `${nome} pagou 297,00 MT por ${metodo}`,
+            text: `${nome} pagou 300,00 MT por ${metodo}`,
             title: '💰 Venda Aprovada!'
         });
 
@@ -106,6 +106,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
 
