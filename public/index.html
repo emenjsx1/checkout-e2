@@ -1,62 +1,270 @@
+
 <!DOCTYPE html>
-<html lang="pt-MZ">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Premise Checkout</title>
+  <title>Checkout Seguro</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
       margin: 0;
-      color: #333;
+      padding: 0;
     }
-    .form-container {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-    }
-    .form-container h2 {
+
+    .header-timer {
+      background-color: #d40000;
+      color: white;
       text-align: center;
-      margin-bottom: 20px;
+      font-weight: bold;
+      padding: 10px;
     }
-    input, select, button {
+
+    .container {
+      max-width: 400px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    .secure {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .country {
+      text-align: right;
+      font-size: 14px;
+      margin-top: -20px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      text-align: center;
+    }
+
+    .logo img {
+      width: 60px;
+    }
+
+    .title {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .price {
+      text-align: center;
+      color: #0077cc;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .payment-methods {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .payment-methods button {
+      flex: 1;
+      padding: 10px;
+      margin-right: 10px;
+      border: 2px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .payment-methods button:last-child {
+      margin-right: 0;
+    }
+
+    .payment-methods .active {
+      border-color: #d40000;
+      background-color: #ffd6d6;
+    }
+
+    .details {
+      margin-top: 20px;
+    }
+
+    .buy-btn {
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-    }
-    button {
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      color: white;
-      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
     }
-    button:hover {
-      opacity: 0.9;
+
+    .buy-btn:hover {
+      background-color: #218838;
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #popup .modal {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
-  <form class="form-container" method="POST" action="/pagar">
-    <h2>💳 Premise Checkout</h2>
-    <input type="text" name="nome" placeholder="Nome completo" required />
-    <input type="email" name="email" placeholder="Email" required />
-    <input type="text" name="telefone" placeholder="Telefone (ex: 84XXXXXXX)" required />
-    <select name="metodo" required>
-      <option value="">Selecione o método</option>
-      <option value="mpesa">M-Pesa</option>
-      <option value="emola">e-Mola</option>
-    </select>
-    <button type="submit">Pagar 10 MT</button>
-  </form>
+
+  <div class="header-timer">
+    Oferta expira em 00:09:56
+  </div>
+
+  <div class="container">
+    <div class="secure">
+      <span>✅ COMPRA 100% SEGURA</span>
+    </div>
+
+    <div class="country">🇲🇿 Moçambique</div>
+
+    <div class="logo">
+      <img src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/3:2/w_2560%2Cc_limit/google-logo.jpg" alt="Logo do Produto">
+    </div>
+
+    <div class="title">MÉTODO PREMISE</div>
+    <div class="price">297,00 MT</div>
+
+    <form id="formPagamento">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+
+      <label>Método de pagamento</label>
+      <div class="payment-methods">
+        <button type="button" data-metodo="mpesa" class="active">📱 M-Pesa</button>
+        <button type="button" data-metodo="emola">📲 e-Mola</button>
+      </div>
+
+      <label for="numero">Número de pagamento</label>
+      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required />
+
+      <div class="details">
+        <p><strong>Detalhes da compra</strong></p>
+        <p>Método Premise</p>
+        <p><strong>Total:</strong> 297,00 MT</p>
+      </div>
+
+      <button type="submit" class="buy-btn">Comprar agora</button>
+    </form>
+  </div>
+
+  <div id="popup">
+    <div class="modal">
+      <h3>🔐 Aguarde...</h3>
+      <p>Você receberá um pedido no seu telemóvel.</p>
+      <p>Digite o PIN e aguarde a confirmação.</p>
+      <p id="contador">Fechando em 10s...</p>
+    </div>
+  </div>
+
+  <script>
+    const metodoBtns = document.querySelectorAll(".payment-methods button");
+    let metodoSelecionado = "mpesa";
+
+    metodoBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        metodoBtns.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        metodoSelecionado = btn.dataset.metodo;
+      });
+    });
+
+    document.getElementById("formPagamento").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const telefone = document.getElementById("numero").value;
+
+      const popup = document.getElementById("popup");
+      popup.style.display = "flex";
+
+      let tempo = 10;
+      const interval = setInterval(() => {
+        document.getElementById("contador").innerText = `Fechando em ${tempo--}s...`;
+        if (tempo < 0) clearInterval(interval);
+      }, 1000);
+
+      try {
+        const res = await fetch("/pagar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            nome,
+            email,
+            telefone,
+            metodo: metodoSelecionado
+          })
+        });
+
+        const html = await res.text();
+        if (res.status === 200) {
+          window.location.href = "https://wa.me/message/5PVL4ECXMEWPI1";
+        } else {
+          popup.style.display = "none";
+          document.body.innerHTML = html;
+        }
+      } catch (error) {
+        popup.style.display = "none";
+        alert("Erro ao processar pagamento. Tente novamente.");
+      }
+    });
+  </script>
 </body>
 </html>
