@@ -16,183 +16,138 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotificacao';
+const META_PIXEL_ID = '4179716432354886';
 
+// Função para obter token OAuth
 async function getToken() {
-    try {
-        const response = await axios.post(`${BASE_URL}/oauth/token`, {
-            grant_type: 'client_credentials',
-            client_id: CLIENT_ID,
-            client_secret: CLIENT_SECRET
-        }, {
-            headers: { 'Content-Type': 'application/json' }
-        });
-        return response.data.access_token;
-    } catch (error) {
-        console.error('❌ Erro ao obter token:', error.response?.data || error.message);
-        throw new Error('Falha na autenticação');
-    }
+  try {
+    const response = await axios.post(`${BASE_URL}/oauth/token`, {
+      grant_type: 'client_credentials',
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET
+    }, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return response.data.access_token;
+  } catch (error) {
+    console.error('❌ Erro ao obter token:', error.response?.data || error.message);
+    throw new Error('Falha na autenticação');
+  }
 }
 
+// Página principal serve o index.html
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Recebe o pedido de pagamento
+// Rota para iniciar o pagamento
 app.post('/pagar', async (req, res) => {
-    const { nome, email, telefone, metodo } = req.body;
-    if (!nome || !email || !telefone || !metodo) {
-        return res.redirect('/');
-    }
-    // Validar telefone (84,85,86,87 + 7 dígitos)
-    if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.redirect('/');
-    }
+  const { nome, email, telefone, metodo } = req.body;
 
-    try {
-        const token = await getToken();
-        const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
-        const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
-        const reference = `Premise${Date.now()}`;
+  if (!nome || !email || !telefone || !metodo) {
+    return res.redirect('/');
+  }
 
-        const paymentPayload = {
-            client_id: CLIENT_ID,
-            amount: "1",
-            phone: telefone,
-            reference
-        };
+  // Validação simples do telefone
+  if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
+    return res.redirect('/');
+  }
 
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        };
+  try {
+    const token = await getToken();
+    const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
+    const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
+    const reference = `Premise${Date.now()}`;
 
-        // Armazenar transação pendente
-        if (!global.transacoes) global.transacoes = new Map();
-        global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
+    const paymentPayload = {
+      client_id: CLIENT_ID,
+      amount: "1",
+      phone: telefone,
+      reference
+    };
 
-        // Enviar requisição para iniciar pagamento
-        await axios.post(endpoint, paymentPayload, { headers });
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
 
-        // Responde com página para polling de status (serve para o front continuar)
-        res.send(`
-            <html>
-            <head>
-                <meta charset="UTF-8" />
-                <title>Pagamento Iniciado</title>
-                <script>
-                    fbq('track', 'InitiateCheckout');
-                    setTimeout(() => {
-                        window.location.href = '/aguardando?ref=${reference}';
-                    }, 1000);
-                </script>
-            </head>
-            <body>
-                <p>🔄 Iniciando pagamento...</p>
-            </body>
-            </html>
-        `);
+    if (!global.transacoes) global.transacoes = new Map();
+    global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
-    } catch (error) {
-        console.error('❌ Erro no pagamento:', error.response?.data || error.message);
-        return res.redirect('/');
-    }
-});
+    await axios.post(endpoint, paymentPayload, { headers });
 
-// Página de espera/processamento com polling
-app.get('/aguardando', (req, res) => {
-    const ref = req.query.ref;
+    // Aqui, respondemos que pagamento foi iniciado,
+    // sem redirecionar para páginas intermediárias
     res.send(`
-        <html>
+      <html>
         <head>
-            <meta charset="UTF-8">
-            <title>Processando Pagamento</title>
-            <style>
-                body { font-family: sans-serif; background: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-                .popup { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.2); text-align: center; max-width: 400px; }
-                .countdown { font-size: 24px; color: #333; margin-top: 15px; }
-            </style>
+          <meta charset="UTF-8" />
+          <title>Pagamento iniciado</title>
+          <script>
+            // Tracking Meta Pixel
+            fbq('track', 'InitiateCheckout');
+
+            // Só informa que pagamento iniciou e pede para aguardar confirmação via webhook
+            document.write('<p>Pagamento iniciado! Aguarde confirmação...</p>');
+          </script>
+          <script src="https://connect.facebook.net/en_US/fbevents.js"></script>
         </head>
-        <body>
-            <div class="popup">
-                <h2>🔒 Processando Pagamento...</h2>
-                <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
-                <div class="countdown" id="countdown">180</div>
-                <p id="mensagem"></p>
-            </div>
-            <script>
-                let segundos = 180;
-                let countdown = document.getElementById('countdown');
-                let mensagem = document.getElementById('mensagem');
-
-                const intervalo = setInterval(() => {
-                    segundos--;
-                    countdown.textContent = segundos;
-                    if (segundos <= 0) {
-                        clearInterval(intervalo);
-                        mensagem.innerHTML = '⚠️ Pagamento não foi concluído.<br><a href="/">Tentar novamente</a>';
-                    }
-                }, 1000);
-
-                const verificar = setInterval(() => {
-                    fetch('/status?ref=${ref}').then(r => r.json()).then(data => {
-                        if (data.status === 'PAGO') {
-                            clearInterval(verificar);
-                            window.location.href = 'https://wa.me/message/5PVL4ECXMEWPI1';
-                        }
-                    });
-                }, 5000);
-            </script>
-        </body>
-        </html>
+        <body></body>
+      </html>
     `);
+
+  } catch (error) {
+    console.error('❌ Erro no pagamento:', error.response?.data || error.message);
+    return res.redirect('/');
+  }
 });
 
-// Endpoint para front polling status do pagamento
-app.get('/status', (req, res) => {
-    const ref = req.query.ref;
-    const t = global.transacoes?.get(ref);
-    res.json({ status: t?.status || 'PENDENTE' });
-});
-
-// Webhook que recebe confirmação real da e2payments
+// Webhook para receber confirmação de pagamento da E2Payments
 app.post('/webhook/pagamento-confirmado', async (req, res) => {
-    const payload = req.body;
-    console.log('📬 Webhook recebido:', payload);
+  const payload = req.body;
+  console.log('📬 Webhook recebido:', payload);
 
-    if (payload.status === "SUCCESS") {
-        const reference = payload.reference;
-        const transacao = global.transacoes?.get(reference);
+  if (payload.status === "SUCCESS") {
+    const reference = payload.reference;
+    const transacao = global.transacoes?.get(reference);
 
-        if (transacao) {
-            transacao.status = 'PAGO';
-            const nome = transacao.nome || "Cliente";
-            const valor = transacao.valor || "297";
+    if (transacao) {
+      transacao.status = 'PAGO';
+      const nome = transacao.nome || "Cliente";
+      const valor = transacao.valor || "297";
 
-            try {
-                // Enviar notificação Pushcut
-                await axios.post(PUSHCUT_URL, {
-                    title: "💰 Venda Aprovada",
-                    text: `📦 ${nome} pagou ${valor},00 MT`,
-                    sound: "default"
-                }, {
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                console.log("🔔 Pushcut enviado com sucesso");
-            } catch (err) {
-                console.error("❌ Falha ao enviar Pushcut:", err.message);
-            }
-        }
+      try {
+        // Envia notificação via Pushcut
+        await axios.post(PUSHCUT_URL, {
+          title: "💰 Venda Aprovada",
+          text: `📦 ${nome} pagou ${valor} MT`,
+          sound: "default"
+        }, {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        console.log("🔔 Pushcut enviado com sucesso");
+      } catch (err) {
+        console.error("❌ Falha ao enviar Pushcut:", err.message);
+      }
+
+      // Aqui poderia mandar outras ações, como log, email, etc.
     }
-
-    res.sendStatus(200);
+  }
+  res.sendStatus(200);
 });
 
+// Saúde da API
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', service: 'Premise Checkout API' });
+});
+
+// Catch all 404
 app.use('*', (req, res) => {
-    res.status(404).send('Página não encontrada.');
+  res.status(404).send('Página não encontrada.');
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
