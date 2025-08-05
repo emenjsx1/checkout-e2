@@ -16,7 +16,7 @@ const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
 
-// URL do Pushcut para iPhone (Iuphone)
+// URL do Pushcut com caracteres codificados corretamente
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
 async function getToken() {
@@ -107,11 +107,11 @@ app.post('/pagar', async (req, res) => {
                 <div class="popup">
                     <h2>🔒 Aguarde...</h2>
                     <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
-                    <div class="countdown" id="countdown">180</div>
+                    <div class="countdown" id="countdown">380</div>
                 </div>
 
                 <script>
-                    let seconds = 180;
+                    let seconds = 380;
                     const countdown = document.getElementById('countdown');
                     const interval = setInterval(() => {
                         seconds--;
@@ -148,7 +148,13 @@ app.post('/webhook/pagamento-confirmado', async (req, res) => {
 
             try {
                 await axios.post(PUSHCUT_URL, {
-                    text: `✅ Venda Aprovada - ${nome} - ${valor},00 MT`
+                    title: "💰 Venda Aprovada",
+                    text: `📦 ${nome} pagou ${valor},00 MT`,
+                    sound: "default"
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
                 });
                 console.log("🔔 Pushcut enviado com sucesso");
             } catch (err) {
@@ -172,4 +178,3 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
-
