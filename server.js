@@ -47,25 +47,24 @@ app.get('/', (req, res) => {
 // Rota de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
-
     if (!nome || !email || !telefone || !metodo) {
-        return res.status(400).json({ erro: 'Todos os campos são obrigatórios.' });
+        return res.redirect('/');
     }
 
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.status(400).json({ erro: 'Número inválido.' });
+        return res.redirect('/');
     }
 
     try {
         const token = await getToken();
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
+        const reference = `Premise${Date.now()}`;
 
-        const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
-        const payload = {
+        const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "1",
+            amount: "297",
             phone: telefone,
-            reference: `Premise${Date.now()}`
+            reference
         };
 
         const headers = {
@@ -74,8 +73,18 @@ app.post('/pagar', async (req, res) => {
             'Content-Type': 'application/json'
         };
 
-        const response = await axios.post(endpoint, payload, { headers });
+        if (!global.transacoes) global.transacoes = new Map();
+        global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
+        await axios.post(`${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`, paymentPayload, { headers });
+
+    } catch (error) {
+        console.error('❌ Erro no pagamento, mas redirecionando mesmo assim:', error.response?.data || error.message);
+    }
+
+    // Redirecionar para o WhatsApp independentemente do erro
+    return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
+});
         // Envia notificação Pushcut
         await axios.post(PUSHCUT_URL, {
             text: `${nome} pagou 297,00 MT por ${metodo}`,
@@ -104,6 +113,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
 
