@@ -17,7 +17,6 @@ const WALLET_MPESA = process.env.WALLET_MPESA;
 const WALLET_EMOLA = process.env.WALLET_EMOLA;
 const META_PIXEL_ID = '4179716432354886';
 
-// URL do Pushcut corretamente codificada
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
 
 async function getToken() {
@@ -78,7 +77,7 @@ app.post('/pagar', async (req, res) => {
             <html>
             <head>
                 <meta charset="UTF-8" />
-                <title>Aguarde</title>
+                <title>Processando Pagamento</title>
                 <script>
                     fbq('track', 'InitiateCheckout');
                 </script>
@@ -109,7 +108,7 @@ app.post('/pagar', async (req, res) => {
             </head>
             <body>
                 <div class="popup">
-                    <h2>🔒 Aguarde...</h2>
+                    <h2>🔒 Processando Pagamento...</h2>
                     <p>Você verá uma tela para digitar seu PIN.<br>Não feche esta página.</p>
                     <div class="countdown" id="countdown">180</div>
                 </div>
@@ -122,7 +121,7 @@ app.post('/pagar', async (req, res) => {
                         countdown.textContent = seconds;
                         if (seconds <= 0) {
                             clearInterval(interval);
-                            countdown.textContent = "Agora verifique seu telemóvel 📱";
+                            countdown.textContent = "Verifique o seu telemóvel 📱 para concluir";
                         }
                     }, 1000);
                 </script>
