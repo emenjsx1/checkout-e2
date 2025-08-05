@@ -63,7 +63,7 @@ app.post('/pagar', async (req, res) => {
         const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
         const payload = {
             client_id: CLIENT_ID,
-            amount: "10",
+            amount: "1",
             phone: telefone,
             reference: `Premise${Date.now()}`
         };
@@ -78,7 +78,7 @@ app.post('/pagar', async (req, res) => {
 
         // Envia notificação Pushcut
         await axios.post(PUSHCUT_URL, {
-            text: `${nome} pagou ${valor},00 MT`,
+            text: `${nome} pagou ${amount},00 MT por ${metodo}`,
             title: '💰 Venda aprovada'
         });
 
@@ -104,4 +104,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
