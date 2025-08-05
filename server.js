@@ -78,7 +78,7 @@ app.post('/pagar', async (req, res) => {
 
         // Envia notificação Pushcut
         await axios.post(PUSHCUT_URL, {
-            text: `${nome} pagou ${amount},00 MT por ${metodo}`,
+            text: `${nome} pagou 297,00 MT por ${metodo}`,
             title: '💰 Venda aprovada'
         });
 
@@ -104,5 +104,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
