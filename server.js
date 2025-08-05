@@ -63,7 +63,7 @@ app.post('/pagar', async (req, res) => {
         const endpoint = `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`;
         const payload = {
             client_id: CLIENT_ID,
-            amount: "297",
+            amount: "10",
             phone: telefone,
             reference: `Premise${Date.now()}`
         };
@@ -103,3 +103,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
