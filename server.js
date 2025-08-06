@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 // Configurações
-const BASE_URL = 'https://http://mpesaemolatech.com';
+const BASE_URL = 'https://mpesaemolatech.com';
 const CLIENT_ID = process.env.CLIENT_ID || '9f903862-a780-440d-8ed5-b8d8090b180e';
 const CLIENT_SECRET = process.env.CLIENT_SECRET || 'BJjRaIVYDCWkvumR32iLBk9ekkiltpIhXlDuwGwz';
 const WALLET_MPESA = process.env.WALLET_MPESA || '993607';
@@ -106,6 +106,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
 
