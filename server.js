@@ -90,7 +90,6 @@ app.post('/pagar', async (req, res) => {
     }
 
     // Redirecionar para o WhatsApp independentemente do erro
-    return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
 });
 // Health check
 app.get('/health', (req, res) => {
@@ -106,6 +105,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
 
