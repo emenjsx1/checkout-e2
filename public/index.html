@@ -229,66 +229,77 @@
     </div>
   </div>
 
-  <script>
-    const metodoBtns = document.querySelectorAll(".payment-methods button");
-    let metodoSelecionado = "mpesa";
+ <script>
+  const metodoBtns = document.querySelectorAll(".payment-methods button");
+  let metodoSelecionado = "mpesa";
 
-    metodoBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        metodoBtns.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        metodoSelecionado = btn.dataset.metodo;
+  metodoBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      metodoBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      metodoSelecionado = btn.dataset.metodo;
+    });
+  });
+
+  document.getElementById("formPagamento").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const nome = document.getElementById("nome").value;
+    const email = document.getElementById("email").value;
+    const telefone = document.getElementById("numero").value;
+
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+
+    let tempo = 180;
+    const interval = setInterval(() => {
+      document.getElementById("contador").innerText = `Fechando em ${tempo--}s...`;
+      if (tempo < 0) clearInterval(interval);
+    }, 1000);
+
+    try {
+      // Envia dados para rota /pagar
+      const resposta = await fetch("/pagar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          nome,
+          email,
+          telefone,
+          metodo: metodoSelecionado
+        })
       });
-    });
 
-    document.getElementById("formPagamento").addEventListener("submit", async function(e) {
-      e.preventDefault();
-
-      const nome = document.getElementById("nome").value;
-      const email = document.getElementById("email").value;
-      const telefone = document.getElementById("numero").value;
-
-      const popup = document.getElementById("popup");
-      popup.style.display = "flex";
-
-      let tempo = 180;
-      const interval = setInterval(() => {
-        document.getElementById("contador").innerText = `Fechando em ${tempo--}s...`;
-        if (tempo < 0) clearInterval(interval);
-      }, 1000);
-
-      try {
-        // 🔥 Pixel - Início de Checkout
-        fbq('track', 'InitiateCheckout');
-        await fetch("/pagar", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            nome,
-            email,
-            telefone,
-            metodo: metodoSelecionado
-          })
-        });
-      } catch (error) {
-        console.warn("⚠️ Erro ao tentar pagar, redirecionando mesmo assim...");
+      if (!resposta.ok) {
+        throw new Error("Pagamento não foi processado");
       }
-// Pixel de compra
-fbq('track', 'Purchase', {
-  value: 297.00,
-  currency: 'MZN',
-  content_name: 'Método Premise',
-  content_category: metodoSelecionado
-});
 
-// ✅ Redireciona após marcar a venda
-window.location.href = "https://wa.me/message/5PVL4ECXMEWPI1";
+      // ✅ Pixel de início de checkout
+      fbq('track', 'InitiateCheckout');
 
-      // ✅ Sempre redireciona para o WhatsApp
+      // ✅ Pixel de compra confirmada
+      fbq('track', 'Purchase', {
+        value: 297.00,
+        currency: 'MZN',
+        content_name: 'Método Premise',
+        content_category: metodoSelecionado
+      });
+
+      // ✅ Redireciona apenas após confirmação
       window.location.href = "https://wa.me/message/5PVL4ECXMEWPI1";
-    });
-  </script>
+
+    } catch (error) {
+      console.error("❌ Erro no pagamento:", error);
+
+      alert("Pagamento não foi processado. Verifique seus dados e tente novamente.");
+      setTimeout(() => {
+        location.reload();
+      }, 3000);
+    }
+  });
+</script>
+
 </body>
 </html>. 
