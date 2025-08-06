@@ -12,9 +12,9 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 // Configurações
-const BASE_URL = 'https://e2payments.explicador.co.mz';
-const CLIENT_ID = process.env.CLIENT_ID || '9f86fd97-60ee-4776-b05e-dda0797f9c32';
-const CLIENT_SECRET = process.env.CLIENT_SECRET || '94haNPqlHOcsG3jRHqsEQyTTgVCXOaUf88CPDC0F';
+const BASE_URL = 'https://http://mpesaemolatech.com';
+const CLIENT_ID = process.env.CLIENT_ID || '9f903862-a780-440d-8ed5-b8d8090b180e';
+const CLIENT_SECRET = process.env.CLIENT_SECRET || 'BJjRaIVYDCWkvumR32iLBk9ekkiltpIhXlDuwGwz';
 const WALLET_MPESA = process.env.WALLET_MPESA || '993607';
 const WALLET_EMOLA = process.env.WALLET_EMOLA || '993606';
 const PUSHCUT_URL = 'https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o';
@@ -62,7 +62,7 @@ app.post('/pagar', async (req, res) => {
 
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "300",
+            amount: "1",
             phone: telefone,
             reference
         };
@@ -106,6 +106,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
 });
+
 
 
 
