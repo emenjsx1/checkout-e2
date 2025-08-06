@@ -275,17 +275,6 @@
       } catch (error) {
         console.warn("⚠️ Erro ao tentar pagar, redirecionando mesmo assim...");
       }
-      
-// Mostra contador de 30s
-let segundos = 60;
-const contador = document.getElementById("contador");
-const intervalo = setInterval(() => {
-  contador.textContent = `Redirecionando em ${segundos--}s...`;
-  if (segundos < 0) clearInterval(intervalo);
-}, 1000);
-
-// Aguarda 30 segundos antes de redirecionar
-setTimeout(() => {
 // Pixel de compra
 fbq('track', 'Purchase', {
   value: 297.00,
