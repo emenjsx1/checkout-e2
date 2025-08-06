@@ -44,14 +44,15 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Rota de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
     if (!nome || !email || !telefone || !metodo) {
-        return res.redirect('/');
+        return res.status(400).send('Dados incompletos.');
     }
 
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.redirect('/');
+        return res.status(400).send('Número inválido.');
     }
 
     try {
@@ -75,21 +76,18 @@ app.post('/pagar', async (req, res) => {
         if (!global.transacoes) global.transacoes = new Map();
         global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
-        const pagamento = await axios.post(`${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`, paymentPayload, { headers });
+        const resposta = await axios.post(`${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`, paymentPayload, { headers });
 
-        console.log('🔁 RESPOSTA DO PAGAMENTO:', pagamento.data);
-
-        // ⚠️ Checa se a API realmente confirmou
-        if (pagamento.data.status === 'pending' || pagamento.data.status === 'initiated') {
-            // Sucesso → envia notificação e redireciona
+        if (resposta.data.status === 'pending' || resposta.data.status === 'initiated') {
+            // Pagamento aceito
             await axios.post(PUSHCUT_URL, {
                 text: `${nome} pagou 300,00 MT por ${metodo}`,
                 title: '💰 Venda Aprovada!'
             });
 
-            return res.redirect('https://wa.me/message/5PVL4ECXMEWPI1');
+            return res.status(200).json({ success: true, redirect: 'https://wa.me/message/5PVL4ECXMEWPI1' });
         } else {
-            console.warn('❌ Pagamento recusado ou falhou:', pagamento.data);
+            console.warn('⚠️ Pagamento recusado ou falhou:', resposta.data);
             return res.status(400).send('Pagamento não foi processado. Verifique seus dados e tente novamente.');
         }
 
@@ -99,7 +97,17 @@ app.post('/pagar', async (req, res) => {
     }
 });
 
+// Health check
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
 
+// 404
+app.use('*', (req, res) => {
+    res.status(404).send('Página não encontrada');
+});
 
-
-
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
