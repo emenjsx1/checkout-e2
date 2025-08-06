@@ -47,22 +47,24 @@ app.get('/', (req, res) => {
 // Rota de pagamento
 app.post('/pagar', async (req, res) => {
     const { nome, email, telefone, metodo } = req.body;
+
+    // Validações básicas
     if (!nome || !email || !telefone || !metodo) {
-        return res.status(400).send('Dados incompletos.');
+        return res.status(400).json({ success: false, message: 'Dados incompletos' });
     }
 
     if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
-        return res.status(400).send('Número inválido.');
+        return res.status(400).json({ success: false, message: 'Número de telefone inválido' });
     }
 
     try {
         const token = await getToken();
         const walletId = metodo === 'mpesa' ? WALLET_MPESA : WALLET_EMOLA;
-        const reference = `Premise${Date.now()}`;
+        const reference = `Premise${Date.now()}`; // sem espaços
 
         const paymentPayload = {
             client_id: CLIENT_ID,
-            amount: "1",
+            amount: "1",       // valor real do pagamento
             phone: telefone,
             reference
         };
@@ -76,24 +78,30 @@ app.post('/pagar', async (req, res) => {
         if (!global.transacoes) global.transacoes = new Map();
         global.transacoes.set(reference, { nome, telefone, metodo, valor: '297', status: 'PENDENTE' });
 
-        const resposta = await axios.post(`${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`, paymentPayload, { headers });
+        const response = await axios.post(
+            `${BASE_URL}/v1/c2b/mpesa-payment/${walletId}`,
+            paymentPayload,
+            { headers }
+        );
 
-        if (resposta.data.status === 'pending' || resposta.data.status === 'initiated') {
-            // Pagamento aceito
+        console.log('Resposta da API e2Payments:', response.data);
+
+        if (response.data && (response.data.status === 'SUCCESS' || response.data.success === true)) {
+            global.transacoes.set(reference, { nome, telefone, metodo, valor: '1', status: 'APROVADA' });
+
             await axios.post(PUSHCUT_URL, {
-                text: `${nome} pagou 300,00 MT por ${metodo}`,
+                text: `${nome} pagou 297,00 MT por ${metodo}`,
                 title: '💰 Venda Aprovada!'
             });
 
-            return res.status(200).json({ success: true, redirect: 'https://wa.me/message/5PVL4ECXMEWPI1' });
+            return res.json({ success: true, redirectUrl: 'https://wa.me/message/5PVL4ECXMEWPI1' });
         } else {
-            console.warn('⚠️ Pagamento recusado ou falhou:', resposta.data);
-            return res.status(400).send('Pagamento não foi processado. Verifique seus dados e tente novamente.');
+            return res.status(400).json({ success: false, message: 'Pagamento não foi processado. Tente novamente.' });
         }
 
     } catch (error) {
-        console.error('❌ Erro ao tentar pagar:', error.response?.data || error.message);
-        return res.status(500).send('Erro ao tentar processar o pagamento. Tente novamente.');
+        console.error('Erro no pagamento:', error.response?.data || error.message);
+        return res.status(500).json({ success: false, message: 'Erro interno no servidor. Tente novamente.' });
     }
 });
 
