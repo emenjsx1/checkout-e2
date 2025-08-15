@@ -90,7 +90,7 @@ app.post('/pagar', async (req, res) => {
             global.transacoes.set(reference, { nome, telefone, metodo, valor: '1', status: 'APROVADA' });
 
             await axios.post(PUSHCUT_URL, {
-                text: `${nome} pagou 297,00 MT por ${metodo}`,
+                text: `${nome} pagou 300,00 MT`,
                 title: '💰 Venda Aprovada!'
             });
 
