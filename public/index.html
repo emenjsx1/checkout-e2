@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout Kito</title>
+  <title>Checkout Seguro - Google Ferramenta</title>
   <!-- Meta Pixel Code -->
 <script>
   !function(f,b,e,v,n,t,s)
@@ -24,200 +24,155 @@
 <!-- End Meta Pixel Code -->
 
   <style>
-  body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    margin: 0;
-    padding: 0;
-  }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
 
-  .header-timer {
-    background: linear-gradient(90deg, #d40000, #ff4d4d);
-    color: white;
-    text-align: center;
-    font-weight: bold;
-    padding: 12px;
-    font-size: 16px;
-    letter-spacing: 1px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  }
+    .header-timer {
+      background-color: #d40000;
+      color: white;
+      text-align: center;
+      font-weight: bold;
+      padding: 10px;
+    }
 
-  .container {
-    max-width: 420px;
-    margin: 40px auto;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    padding: 25px;
-    animation: fadeIn 0.5s ease;
-  }
-
-  .secure {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: #28a745;
-    margin-bottom: 8px;
-  }
-
-  .country {
-    text-align: right;
-    font-size: 14px;
-    margin-bottom: 12px;
-    color: #555;
-  }
-
-  .logo {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .logo img {
-    width: 70px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  .title {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 12px;
-    font-size: 20px;
-    color: #333;
-  }
-
-  .price {
-    text-align: center;
-    color: #0077cc;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-
-  label {
-    display: block;
-    margin-top: 12px;
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #444;
-  }
-
-  input[type="text"],
-  input[type="email"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: border 0.2s ease;
-  }
-
-  input:focus {
-    border-color: #0077cc;
-    outline: none;
-    box-shadow: 0 0 6px rgba(0,119,204,0.2);
-  }
-
-  .payment-methods {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .payment-methods button {
-    flex: 1;
-    padding: 10px;
-    border: 2px solid #ccc;
-    background-color: white;
-    cursor: pointer;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-  }
-
-  .payment-methods button:hover {
-    background-color: #f8f9fa;
-    border-color: #0077cc;
-  }
-
-  .payment-methods .active {
-    border-color: #d40000;
-    background: linear-gradient(135deg, #ffd6d6, #fff0f0);
-  }
-
-  .details {
-    margin-top: 20px;
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-
-  .buy-btn {
-    margin-top: 20px;
-    background: linear-gradient(135deg, #28a745, #34ce57);
-    color: white;
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease;
-  }
-
-  .buy-btn:hover {
-    background: linear-gradient(135deg, #218838, #28a745);
-  }
-
-  #popup {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(2px);
-  }
-
-  #popup .modal {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    text-align: center;
-    max-width: 320px;
-    animation: fadeIn 0.4s ease;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
-  }
-
-  /* Responsividade */
-  @media (max-width: 480px) {
     .container {
-      margin: 20px;
+      max-width: 400px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 20px;
     }
+
+    .secure {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .country {
+      text-align: right;
+      font-size: 14px;
+      margin-top: -20px;
+      margin-bottom: 10px;
+    }
+
+    .logo {
+      text-align: center;
+    }
+
+    .logo img {
+      width: 60px;
+    }
+
     .title {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 10px;
       font-size: 18px;
     }
-    .price {
-      font-size: 20px;
-    }
-    .buy-btn {
-      font-size: 15px;
-    }
-  }
-</style>
 
+    .price {
+      text-align: center;
+      color: #0077cc;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .payment-methods {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .payment-methods button {
+      flex: 1;
+      padding: 10px;
+      margin-right: 10px;
+      border: 2px solid #ccc;
+      background-color: white;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .payment-methods button:last-child {
+      margin-right: 0;
+    }
+
+    .payment-methods .active {
+      border-color: #d40000;
+      background-color: #ffd6d6;
+    }
+
+    .details {
+      margin-top: 20px;
+    }
+
+    .buy-btn {
+      margin-top: 20px;
+      background-color: #28a745;
+      color: white;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .buy-btn:hover {
+      background-color: #218838;
+    }
+
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    #popup .modal {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
 
@@ -241,7 +196,7 @@
 
     <form id="formPagamento">
       <label for="nome">Nome completo</label>
-      <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+      <input type="text" id="nome" name="nome" placeholder="Seu nome" required  />
 
       <label for="email">Email</label>
       <input type="email" id="email" name="email" placeholder="seu@email.com" required />
@@ -253,7 +208,7 @@
       </div>
 
       <label for="numero">Número de pagamento</label>
-      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required />
+      <input type="text" id="numero" name="telefone" placeholder="8xxxxxxxx" required minlength="9" maxlength="9" />
 
       <div class="details">
         <p><strong>Detalhes da compra</strong></p>
@@ -277,6 +232,10 @@
  <script>
   const metodoBtns = document.querySelectorAll(".payment-methods button");
   let metodoSelecionado = "mpesa";
+  let wallet_id = ""
+  let number_waht = "258824342006"
+  let push_cut ="https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o"
+  let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM"
 
   metodoBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -286,12 +245,23 @@
     });
   });
 
+  fbq('track','InitiateCheckout')
+
+
   document.getElementById("formPagamento").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const telefone = document.getElementById("numero").value;
+
+    if (!nome || !email || !telefone || !metodoSelecionado) {
+        throw new Error('Dados incompletos')
+    }
+
+    if (!/^(84|85|86|87)\d{7}$/.test(telefone)) {
+        throw new Error('Numero de telefone invalido')
+    }
 
     const popup = document.getElementById("popup");
     popup.style.display = "flex";
@@ -302,46 +272,64 @@
       if (tempo < 0) clearInterval(interval);
     }, 1000);
 
+
+    if(metodoSelecionado === 'mpesa'){
+      wallet_id = "993607"
+    } else if(metodoSelecionado === 'emola'){
+      wallet_id = "993606"
+    }
+
     try {
       // Envia dados para rota /pagar
-      const resposta = await fetch("/pagar", {
+      const resposta = await fetch(`https://mpesaemolatech.com/v1/c2b/${metodoSelecionado}-payment/${wallet_id}`,{
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
-        },
+           "Authorization": `Bearer ${acess_token}`,
+           "Accept": "application/json",
+           "Content-Type": "application/json"
+          },
+
         body: JSON.stringify({
-          nome,
-          email,
-          telefone,
-          metodo: metodoSelecionado
+            "client_id": "9f903862-a780-440d-8ed5-b8d8090b180e",
+            "amount": "300",// no intervalo de 1 a 1250000
+            "phone": telefone,//9 digitos  
+            "reference": "PrimeiroPagamento"
         })
-      });
+      }).then(async(response)=>{
+      if(response.status === 200){
+        try{
+        await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou 300 MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})})   
+        }catch(error){}
+        let mensagem = `Comprei o produto Google Ferramenta e quero o receber, meu nome é ${nome}, paguei usando o emola pelo numero: ${telefone}`;
+        let link = `https://wa.me/${number_waht}?text=` + encodeURIComponent(mensagem);
 
-      if (!resposta.ok) {
-        throw new Error("Pagamento não foi processado");
-      }
-
-      // ✅ Pixel de início de checkout
-      fbq('track', 'InitiateCheckout');
-
-      // ✅ Pixel de compra confirmada
       fbq('track', 'Purchase', {
-        value: 297.00,
+        value: 300.00,
         currency: 'MZN',
         content_name: 'Método Premise',
         content_category: metodoSelecionado
       });
-
-      // ✅ Redireciona apenas após confirmação
-      window.location.href = "https://wa.me/message/5PVL4ECXMEWPI1";
-
-    } catch (error) {
-      console.error("❌ Erro no pagamento:", error);
-
-      alert("Pagamento não foi processado. Verifique seus dados e tente novamente.");
-      setTimeout(() => {
-        location.reload();
-      }, 3000);
+        window.location.href = link
+        return      
+        } else {
+        throw new Error("Pagamento não foi processado");
+        setTimeout(()=>{
+          window.location.reload()
+        },2000)
+        return          
+        }
+      }).catch(()=>{
+        throw new Error("Pagamento não foi processado");
+        setTimeout(()=>{
+          window.location.reload()
+        },2000)
+      });
+    } catch(error){
+      //'
+      throw new Error("Pagamento não foi processado");
+      setTimeout(()=>{
+          window.location.reload()
+      },2000)
     }
   });
 </script>
