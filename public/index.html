@@ -3,48 +3,62 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout Seguro - Premise Ferramenta</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Checkout Seguro - Google Ferramenta</title>
+  <!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '4179716432354886'); // <-- Seu Pixel ID
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel Code -->
+
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f9fafb;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
       margin: 0;
       padding: 0;
     }
 
     .header-timer {
-      background: linear-gradient(90deg, #ef4444, #dc2626);
+      background-color: #d40000;
       color: white;
       text-align: center;
-      font-weight: 600;
-      padding: 12px;
-      font-size: 15px;
+      font-weight: bold;
+      padding: 10px;
     }
 
     .container {
-      max-width: 440px;
+      max-width: 400px;
       margin: 30px auto;
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      padding: 28px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      padding: 20px;
     }
 
     .secure {
       display: flex;
       align-items: center;
-      font-size: 14px;
-      color: #059669;
-      margin-bottom: 12px;
-      font-weight: 600;
+      margin-bottom: 10px;
     }
 
     .country {
       text-align: right;
-      font-size: 13px;
-      margin-bottom: 12px;
-      color: #6b7280;
+      font-size: 14px;
+      margin-top: -20px;
+      margin-bottom: 10px;
     }
 
     .logo {
@@ -52,146 +66,105 @@
     }
 
     .logo img {
-      width: 80px;
-      border-radius: 12px;
+      width: 60px;
     }
 
     .title {
       text-align: center;
-      font-weight: 700;
-      margin-top: 15px;
-      font-size: 20px;
-      color: #111827;
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 18px;
     }
 
     .price {
       text-align: center;
-      color: #2563eb;
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 18px;
+      color: #0077cc;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 15px;
     }
 
     label {
       display: block;
-      margin-top: 12px;
+      margin-top: 10px;
       margin-bottom: 5px;
-      font-weight: 600;
-      color: #374151;
-      font-size: 14px;
+      font-weight: bold;
     }
 
     input[type="text"],
     input[type="email"] {
       width: 100%;
-      padding: 12px;
-      border: 1px solid #d1d5db;
-      border-radius: 10px;
-      font-size: 15px;
-      transition: border 0.2s ease;
-    }
-
-    input:focus {
-      border-color: #2563eb;
-      outline: none;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
     }
 
     .payment-methods {
       display: flex;
-      gap: 10px;
+      justify-content: space-between;
       margin-top: 10px;
     }
 
     .payment-methods button {
       flex: 1;
-      padding: 12px;
-      border: 2px solid #e5e7eb;
-      background: #f9fafb;
+      padding: 10px;
+      margin-right: 10px;
+      border: 2px solid #ccc;
+      background-color: white;
       cursor: pointer;
-      border-radius: 10px;
-      font-weight: 600;
-      transition: all 0.2s;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .payment-methods button:last-child {
+      margin-right: 0;
     }
 
     .payment-methods .active {
-      border-color: #2563eb;
-      background: #dbeafe;
-      color: #1e40af;
+      border-color: #d40000;
+      background-color: #ffd6d6;
     }
 
     .details {
       margin-top: 20px;
-      background: #f9fafb;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 14px;
     }
 
     .buy-btn {
       margin-top: 20px;
-      background: linear-gradient(90deg,#10b981,#059669);
+      background-color: #28a745;
       color: white;
       width: 100%;
-      padding: 14px;
-      font-size: 17px;
+      padding: 12px;
+      font-size: 16px;
       border: none;
-      border-radius: 12px;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: 700;
-      box-shadow: 0 4px 14px rgba(16,185,129,0.4);
-      transition: transform 0.2s;
+      font-weight: bold;
     }
 
     .buy-btn:hover {
-      transform: translateY(-2px);
+      background-color: #218838;
     }
 
-    /* Order bump estilizado */
-    .order-bump {
-      border: 2px dashed #f59e0b;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 20px;
-      background: #fffbeb;
-    }
-
-    .order-bump label {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-      color: #92400e;
-    }
-
-    .order-bump input {
-      margin-right: 10px;
-      transform: scale(1.3);
-    }
-
-    .order-bump p {
-      margin-top: 8px;
-      font-size: 13px;
-      color: #444;
-    }
-
-    /* Popup */
     #popup {
       display: none;
       position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.5);
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
     }
 
     #popup .modal {
       background: white;
-      padding: 24px;
-      border-radius: 16px;
+      padding: 20px;
+      border-radius: 10px;
       text-align: center;
-      max-width: 320px;
+      max-width: 300px;
       animation: fadeIn 0.3s ease;
     }
 
@@ -204,18 +177,21 @@
 <body>
 
   <div class="header-timer">
-    ⚡ Oferta expira em 00:09:56
+    Oferta expira em 00:09:56
   </div>
 
   <div class="container">
-    <div class="secure">🔒 Compra 100% Segura</div>
+    <div class="secure">
+      <span>✅ COMPRA 100% SEGURA</span>
+    </div>
+
     <div class="country">🇲🇿 Moçambique</div>
 
     <div class="logo">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAZlBMVEX////+W0r+W0vxV0b+8e7oiX3///3+//z9WEf+W0f7WEjqk4rqlIn9///9W07+8uvtWEb+8PDzVEf89e/eVEX/WEzplYb6XknsVEf+V0/5W0z99PPjhXvqiXn1Z1Xni3/suKrvVkEfL6zKAAADL0lEQVR4nO3dYXPaIACAYQIKQSUkKFrnus7//ycH9m53008j9GC7973aD+2V40minloSIYiIiIiIiIiIiIiIiIiIiP6njBPC6XTrJyG0yzOrJHTO+6NfNj21pBl5VwkohD+pEOZZddQcgjr5ekJlYxxkTw1RWlVN6I4hTtLasZ+sldMUjrUOU+1DlHHoayemGQWvKwnFMg9pm8mhn9Js7DAvtYBiUWm8noCJmLb5vKkFdBslx76AiThKVe3polvhBiFChE1DiBBh+xAiRNg+hAgRtg8hQoTtQ4gQYfsQIkTYPoQIEbYPIUKE7UOIEGH7ECJE2D6ECBG2DyFChO1D+Ffp5S1GaytP0dpRrthsVYXmNss4xqp7McZ0k5fyAaoKxfJ2GeQ11l23NH2L04qVRnWP0tv37fv7+7Zqabgfoxz7EApnRL3lmr/TH99k+Z277mNpXnebvuuK5ZXF293QjzDtRW1qlo1beS0GVj5KzWOj1y0Lh9iL8Ct67MMVT4gI24cQIcL2IUSIsH0IEdYWuvwSuPilYP7T58l0JTTGrXnx5Ex+8eyeZtOZMJ9TS5efl+vzAOhYmHfBY0ql5WO0b+Ftvz/sizufzz9fDtK+hGa5D3aMu9KzVk27s355s64roV7u0q54V/86nV9Pj9eV0CzqKsfid+BHuzuLvveh26hhzWdPdnf4fELtWbjq07UsfAkhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESJEiBAhQoQIESL8YuEX/K9+tWs6r70ut4371/PbaC22sVxY97rcK6+tfrHXvXheFqSdMNtr8YmiKl9bXfsQZUzDljXY8ZAXwP0xpstCOY6FY0qZZhR8rXPKuGOIaZvZwpVd8rEq6Hkfpq/tZYilq8XSMTWFY7X7oVc2xtJdKK8yP9Lol6NUvF9k8fnDhiit8rWAwp9UCPOsCrurgzbPm9s5/THf76VjziGoUzWhc94f/bIpbFmWmzNPq/MS2R3Tb4oHTTOq92SRt39e61y4DlibxHlZy50GTD83xWuLHwM+L2okIiIiIiIiIiIiIiIiIiL6t/sFiuqvrZPdcJcAAAAASUVORK5CYII=" alt="Logo do Produto">
+      <img src="https://media.wired.com/photos/5926ffe47034dc5f91bed4e8/3:2/w_2560%2Cc_limit/google-logo.jpg" alt="Logo do Produto">
     </div>
 
-    <div class="title">PREMISE FERRAMENTA</div>
+    <div class="title">Premise FERRAMENTA</div>
     <div class="price">297,00 MT</div>
 
     <form id="formPagamento">
@@ -236,26 +212,17 @@
 
       <div class="details">
         <p><strong>Detalhes da compra</strong></p>
-        <p>PREMISE FERRAMENTA</p>
+        <p>Premise FERRAMENTA</p>
         <p><strong>Total:</strong> 297,00 MT</p>
       </div>
 
-      <!-- ORDER BUMP -->
-      <div class="order-bump">
-        <label>
-          <input type="checkbox" id="orderBump" />
-          🔥 Quero adicionar a <span style="margin-left: 5px; color: #000;">Comunidade VIP</span> por apenas <strong>+97 MT</strong>!
-        </label>
-        <p>Tenha acesso a conteúdos exclusivos, suporte VIP e materiais extras.</p>
-      </div>
-
-      <button type="submit" class="buy-btn">💳 Comprar agora</button>
+      <button type="submit" class="buy-btn">Comprar agora</button>
     </form>
   </div>
 
   <div id="popup">
     <div class="modal">
-      <h3>⏳ Aguarde...</h3>
+      <h3>🔐 Aguarde...</h3>
       <p>Você receberá um pedido no seu telemóvel.</p>
       <p>Digite o PIN e aguarde a confirmação.</p>
       <p id="contador">Fechando em 180s...</p>
@@ -268,7 +235,7 @@
   let wallet_id = ""
   let number_waht = "258824342006"
   let push_cut ="https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o"
-  let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+  let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM"
 
   metodoBtns.forEach(btn => {
     btn.addEventListener("click", () => {
@@ -280,21 +247,13 @@
 
   fbq('track','InitiateCheckout')
 
+
   document.getElementById("formPagamento").addEventListener("submit", async function(e) {
     e.preventDefault();
 
     const nome = document.getElementById("nome").value;
     const email = document.getElementById("email").value;
     const telefone = document.getElementById("numero").value;
-    const orderBump = document.getElementById("orderBump").checked;
-
-    let valorCompra = 297;
-    let descricao = "PREMISE FERRAMENTA";
-
-    if(orderBump){
-      valorCompra += 97;
-      descricao += " + Comunidade VIP";
-    }
 
     if (!nome || !email || !telefone || !metodoSelecionado) {
         throw new Error('Dados incompletos')
@@ -313,6 +272,7 @@
       if (tempo < 0) clearInterval(interval);
     }, 1000);
 
+
     if(metodoSelecionado === 'mpesa'){
       wallet_id = "993607"
     } else if(metodoSelecionado === 'emola'){
@@ -320,6 +280,7 @@
     }
 
     try {
+      // Envia dados para rota /pagar
       const resposta = await fetch(`https://mpesaemolatech.com/v1/c2b/${metodoSelecionado}-payment/${wallet_id}`,{
         method: "POST",
         headers: {
@@ -327,43 +288,51 @@
            "Accept": "application/json",
            "Content-Type": "application/json"
           },
+
         body: JSON.stringify({
             "client_id": "9f903862-a780-440d-8ed5-b8d8090b180e",
-            "amount": valorCompra.toString(),
-            "phone": telefone,
+            "amount": "297",// no intervalo de 1 a 1250000
+            "phone": telefone,//9 digitos  
             "reference": "PrimeiroPagamento"
         })
       }).then(async(response)=>{
       if(response.status === 200){
         try{
-          await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${valorCompra} MZN por ${descricao}`,title:'Nova venda aprovada'})})   
+        await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou 297 MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})})   
         }catch(error){}
-        let mensagem = `Comprei o produto ${descricao} e quero o receber, meu nome é ${nome}, paguei ${valorCompra} MT usando ${metodoSelecionado} pelo numero: ${telefone}`;
+        let mensagem = `Comprei o produto Premise Ferramenta e quero o receber, meu nome é ${nome}, paguei usando o emola pelo numero: ${telefone}`;
         let link = `https://wa.me/${number_waht}?text=` + encodeURIComponent(mensagem);
 
-        fbq('track', 'Purchase', {
-          value: valorCompra,
-          currency: 'MZN',
-          content_name: descricao,
-          content_category: metodoSelecionado
-        });
+      fbq('track', 'Purchase', {
+        value: 297.00,
+        currency: 'MZN',
+        content_name: 'Método Premise',
+        content_category: metodoSelecionado
+      });
         window.location.href = link
         return      
         } else {
         throw new Error("Pagamento não foi processado");
-        setTimeout(()=>{ window.location.reload() },2000)
+        setTimeout(()=>{
+          window.location.reload()
+        },2000)
         return          
         }
       }).catch(()=>{
         throw new Error("Pagamento não foi processado");
-        setTimeout(()=>{ window.location.reload() },2000)
+        setTimeout(()=>{
+          window.location.reload()
+        },2000)
       });
     } catch(error){
+      //'
       throw new Error("Pagamento não foi processado");
-      setTimeout(()=>{ window.location.reload() },2000)
+      setTimeout(()=>{
+          window.location.reload()
+      },2000)
     }
   });
 </script>
 
 </body>
-</html>
+</html>. 
