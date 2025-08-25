@@ -290,7 +290,7 @@
     const wallet_id = (metodoSelecionado === "mpesa") ? WALLET_MPESA : WALLET_EMOLA;
 
     // Chamar API de pagamento
-    fetch(`${API_BASE}/${metodoSelecionado}-payment/${wallet_id}`, {
+fetch(`${API_BASE}/${metodoSelecionado}-payment/${wallet_id}`, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${ACCESS_TOKEN}`,
@@ -304,24 +304,31 @@
     reference: "premise"
   })
 })
-.then(async resp => {
+.then(resp => {
   if (resp.ok) {
     // Enviar PushCut
-    try {
-      const pushPayload = {
+    return fetch(PUSHCUT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         title: "Nova venda aprovada",
         text: `Nome: ${nome}\nMétodo: ${metodoSelecionado.toUpperCase()}\nValor: ${total} MT\nOrder Bump: ${bump ? "SIM (+97)" : "NÃO"}`
-      };
-      await fetch(PUSHCUT_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(pushPayload) });
-    } catch(e) {}
+      })
+    })
+    .catch(()=>{})  // silencioso
+    .then(()=> resp); // continua o fluxo
+  } else {
+    throw new Error("Pagamento não aprovado");
+  }
+})
+.then(resp => {
+  // Pixel de Purchase
+  try {
+    fbq('track','Purchase',{ value: total, currency: 'MZN', content_name:'Método Premise', content_category: metodoSelecionado });
+  } catch(e) {}
 
-    // Pixel de Purchase
-    try {
-      fbq('track','Purchase',{ value: total, currency: 'MZN', content_name:'Método Premise', content_category: metodoSelecionado });
-    } catch(e) {}
-
-    // Redirecionar WhatsApp
-    const msg =
+  // Redirecionar WhatsApp
+  const msg =
 `Comprei o produto Premise e quero receber.
 Nome: ${nome}
 Email: ${email}
@@ -329,12 +336,8 @@ Pago via: ${metodoSelecionado.toUpperCase()}
 Número: ${telefone}
 Order Bump: ${bump ? "SIM (+97 MT)" : "NÃO"}
 Total: ${total} MT`;
-    const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-    window.location.href = link;
-  } else {
-    erroPagamentoEl.style.display = "block";
-    setTimeout(() => window.location.reload(), 2000);
-  }
+  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.location.href = link;
 })
 .catch(err => {
   erroPagamentoEl.style.display = "block";
