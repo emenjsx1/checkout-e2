@@ -131,17 +131,14 @@ input[type="text"], input[type="email"]{
   </form>
 </div>
 
- <div id="popup">
-    <div class="modal">
-      <div id="spinner"></div>
-      <h3>🔐 Processando pagamento...</h3>
-      <p>Enviando pedido via <b><span id="metodoNome">M-Pesa</span></b>.</p>
-      <p>Após digitar o PIN, aguarde a confirmação.</p>
-      <p id="contador">Fechando em 180s...</p>
-      <p class="error-msg" id="erroPagamento">⚠️ Erro no pagamento. Tente novamente.</p>
-      <button id="refreshBtn" class="refresh-btn">🔄 Atualizar página</button>
-    </div>
+<div id="popup">
+  <div class="modal">
+    <h3>🔐 Processando pagamento...</h3>
+    <p>Enviando pedido via <b><span id="metodoNome">M-Pesa</span></b>.</p>
+    <p>Aguarde a confirmação após digitar o PIN.</p>
+    <p id="contador">Fechando em 180s...</p>
   </div>
+</div>
 
 
 <script>
