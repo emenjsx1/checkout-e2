@@ -15,14 +15,13 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '4179716432354886'); /* teu Pixel ID */
+    fbq('init', '4179716432354886'); 
     fbq('track', 'PageView');
   </script>
   <noscript>
     <img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"/>
   </noscript>
-  <!-- /Pixel -->
 
   <style>
     :root{
@@ -34,16 +33,9 @@
       font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
       background:var(--bg); color:var(--text); margin:0; padding:0;
     }
-    .header-timer{
-      background: var(--accent);
-      color:#fff; text-align:center; font-weight:700; padding:12px; font-size:18px;
-    }
+    .header-timer{ background: var(--accent); color:#fff; text-align:center; font-weight:700; padding:12px; font-size:18px; }
     .wrap{max-width:520px; margin:28px auto; padding:0 16px}
-    .card{
-      background:var(--card); border:1px solid var(--stroke);
-      border-radius:16px; box-shadow:0 10px 28px rgba(16,24,40,.06);
-      padding:22px;
-    }
+    .card{ background:var(--card); border:1px solid var(--stroke); border-radius:16px; box-shadow:0 10px 28px rgba(16,24,40,.06); padding:22px; }
     .row{display:flex; align-items:center; justify-content:space-between; gap:8px}
     .secure{color:var(--accent-2); font-weight:700; font-size:13px}
     .country{color:var(--muted); font-size:13px}
@@ -53,50 +45,22 @@
     .price{text-align:center; color:#2563eb; font-size:26px; font-weight:800; margin:0 0 4px}
     .subprice{text-align:center; color:var(--muted); font-size:12px; margin-bottom:12px}
     label{display:block; margin:12px 0 6px; font-weight:700; font-size:14px}
-    input[type="text"], input[type="email"]{
-      width:100%; padding:12px 14px; background:var(--input); color:var(--text);
-      border:1px solid var(--stroke); border-radius:10px; font-size:15px; outline: none;
-    }
+    input[type="text"], input[type="email"]{ width:100%; padding:12px 14px; background:var(--input); color:var(--text); border:1px solid var(--stroke); border-radius:10px; font-size:15px; outline: none; }
     .payment-methods{display:flex; gap:10px; margin-top:8px}
-    .payment-methods button{
-      flex:1; padding:12px; border:2px solid var(--stroke); background:#fff;
-      color:var(--text); border-radius:10px; font-weight:800; cursor:pointer; transition:.25s
-    }
+    .payment-methods button{ flex:1; padding:12px; border:2px solid var(--stroke); background:#fff; color:var(--text); border-radius:10px; font-weight:800; cursor:pointer; transition:.25s }
     .payment-methods button.active{border-color:var(--accent); background:#fff5f5}
-    .details{
-      margin-top:16px; background:#f8fafc; border:1px solid var(--stroke);
-      padding:12px; border-radius:10px; font-size:14px; color:#111827;
-    }
-    .bump{
-      margin-top:14px; display:flex; gap:12px; align-items:flex-start;
-      background:#fff8e1; border:1px solid #facc15; border-radius:12px; padding:12px;
-    }
+    .details{ margin-top:16px; background:#f8fafc; border:1px solid var(--stroke); padding:12px; border-radius:10px; font-size:14px; color:#111827; }
+    .bump{ margin-top:14px; display:flex; gap:12px; align-items:flex-start; background:#fff8e1; border:1px solid #facc15; border-radius:12px; padding:12px; }
     .bump input{margin-top:3px; width:18px; height:18px; cursor:pointer}
     .bump .txt{font-size:14px; line-height:1.35}
     .bump .txt .t{color:#a16207; font-weight:800}
-    .total{
-      margin-top:12px; display:flex; align-items:center; justify-content:space-between;
-      font-weight:800; font-size:18px;
-    }
-    .buy-btn{
-      margin-top:16px; background:var(--accent-2); color:#fff; width:100%;
-      padding:14px; font-size:17px; border:none; border-radius:12px; cursor:pointer; font-weight:900;
-      box-shadow:0 8px 24px rgba(22,163,74,.25); transition:.25s;
-    }
+    .total{ margin-top:12px; display:flex; align-items:center; justify-content:space-between; font-weight:800; font-size:18px; }
+    .buy-btn{ margin-top:16px; background:var(--accent-2); color:#fff; width:100%; padding:14px; font-size:17px; border:none; border-radius:12px; cursor:pointer; font-weight:900; box-shadow:0 8px 24px rgba(22,163,74,.25); transition:.25s; }
     .buy-btn:hover{filter:brightness(1.05)}
     .guarantee{text-align:center; margin-top:10px; font-size:12px; color:var(--muted)}
     .hint{font-size:12px; color:var(--muted); margin-top:8px}
-    /* Modal */
-    #popup{
-      display:none; position:fixed; inset:0; background:rgba(0,0,0,.45);
-      justify-content:center; align-items:center; padding:16px; z-index:50;
-    }
-    #popup .modal{
-      background:#fff; border:1px solid var(--stroke);
-      padding:22px; border-radius:14px; text-align:center; max-width:360px; width:100%;
-      animation:fadeIn .25s ease; box-shadow:0 16px 48px rgba(0,0,0,.15);
-      color:#111827;
-    }
+    #popup{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); justify-content:center; align-items:center; padding:16px; z-index:50; }
+    #popup .modal{ background:#fff; border:1px solid var(--stroke); padding:22px; border-radius:14px; text-align:center; max-width:360px; width:100%; animation:fadeIn .25s ease; box-shadow:0 16px 48px rgba(0,0,0,.15); color:#111827; }
     #popup h3{margin:0 0 8px}
     #popup p{margin:8px 0; color:#374151}
     #spinner{width:36px;height:36px;border:3px solid #e5e7eb;border-top-color:#111827;border-radius:50%;margin:10px auto;animation:spin 1s linear infinite}
@@ -104,106 +68,97 @@
     .refresh-btn{display:none; margin-top:8px; background:#dc2626; color:#fff; border:0; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:800}
     @keyframes fadeIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
     @keyframes spin{to{transform:rotate(360deg)}}
-    @media (max-width:560px){
-      .wrap{margin:18px auto}
-      .price{font-size:24px}
-    }
+    @media (max-width:560px){ .wrap{margin:18px auto} .price{font-size:24px} }
   </style>
 </head>
 <body>
 
-  <div class="header-timer">
-    Oferta expira em <span id="timer">10:00</span>
-  </div>
+<div class="header-timer">
+  Oferta expira em <span id="timer">10:00</span>
+</div>
 
-  <div class="wrap">
-    <div class="card">
+<div class="wrap">
+  <div class="card">
 
-      <div class="row">
-        <div class="secure">🔒 COMPRA 100% SEGURA</div>
-        <div class="country">🇲🇿 Moçambique</div>
+    <div class="row">
+      <div class="secure">🔒 COMPRA 100% SEGURA</div>
+      <div class="country">🇲🇿 Moçambique</div>
+    </div>
+
+    <div class="logo">
+      <img alt="Logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAArlBMVEX////+W0r9W0z+W0j1zcP9T0L9UTf+Wk72y8X+VUn5WD//WUvzh3j6pJj8VkX3g3PxkIj56eL0T0T64tb6/////P/9XEb4//v/9/r04dby0L7zysPz6uT6nZX6Rj37UT/8Pj/8wr72YET3y7j6yb/8oZPwuqrwgHXxhnH0Z1fqk4n4//T/+/f36t754t7snZbvUz30i4j0p5b/Vzf/Sjv1ta3vgH3mgXfyo6ft/vpMKgluAAAB7ElEQVR4nO3d23LSQACA4ZBwaEPBUjbBQ9toW0UL1qqV2vd/MfESnOkkZVzCzPfdkmX5s1dkdidJAgAAAAAAAAAAAAAAEEMRQtT5wux11PnWM77pHr3txvPuPO4dXbu4vKx60VTvP8QODKO8LLNornrX8dcwH6TRDAfVTezAZJQPO9Fkg/6RQoUKFSpUqFChQoUKFSpUqFChQoUKFSpUqFChQoUKFSpUqFChQoUK91y4wzau9heGUZ4Onv+dz32alWmal+0u/PjQG++gl3XK+gu5l8JP8/nnVy+3+lJ/BfdUuNhxN+RtL01bXVjsOD7cVi0v3NmpQoWtp1Bh+ylU2H4KFf5/i79HEOtLwnJ5WIXF+WTydVLfXbF1QrL1hcm36qyB+/vpbPMPZesLw6hfNnjYll9Ot76g9YXJRd7kAGGnd3iFzZ6XZgoVKlSoUKFChQoVKlSoUKFChQoVKlSoUKFChQoVKlSoUKFChQoVKjzswqs0bXDa8N/CvMH4bFDtY9fXsP4iDsuz6dZJsO/Vcf01HGbj69iB4Udelce19avp5gsxZqd51ak9fPzz4Sb2mwOKX6vVSX2Pj3dbp91+z5uMP1l1IwcmxSIks/qXh2WYbVz+tGwwej0+eWpyOQAAAAAAAAAAAAAAwMv9AY0Ld7MstcjAAAAAAElFTkSuQmCC" />
+    </div>
+
+    <div class="title">Premise</div>
+    <div class="price" id="price">297,00 MT</div>
+    <div class="subprice">Produto digital – entrega via WhatsApp após confirmação</div>
+
+    <form id="formPagamento" novalidate>
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="seu@email.com" required />
+
+      <label>Método de pagamento</label>
+      <div class="payment-methods">
+        <button type="button" data-metodo="mpesa" class="active">📱 M-Pesa</button>
+        <button type="button" data-metodo="emola">📲 e-Mola</button>
       </div>
 
-      <div class="logo">
-        <!-- Tua imagem base64 -->
-        <img alt="Logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAArlBMVEX////+W0r9W0z+W0j1zcP9T0L9UTf+Wk72y8X+VUn5WD//WUvzh3j6pJj8VkX3g3PxkIj56eL0T0T64tb6/////P/9XEb4//v/9/r04dby0L7zysPz6uT6nZX6Rj37UT/8Pj/8wr72YET3y7j6yb/8oZPwuqrwgHXxhnH0Z1fqk4n4//T/+/f36t754t7snZbvUz30i4j0p5b/Vzf/Sjv1ta3vgH3mgXfyo6ft/vpMKgluAAAB7ElEQVR4nO3d23LSQACA4ZBwaEPBUjbBQ9toW0UL1qqV2vd/MfESnOkkZVzCzPfdkmX5s1dkdidJAgAAAAAAAAAAAAAAEEMRQtT5wux11PnWM77pHr3txvPuPO4dXbu4vKx60VTvP8QODKO8LLNornrX8dcwH6TRDAfVTezAZJQPO9Fkg/6RQoUKFSpUqFChQoUKFSpUqFChQoUKFSpUqFChQoUKFSpUqFChQoUK91y4wzau9heGUZ4Onv+dz32alWmal+0u/PjQG++gl3XK+gu5l8JP8/nnVy+3+lJ/BfdUuNhxN+RtL01bXVjsOD7cVi0v3NmpQoWtp1Bh+ylU2H4KFf5/i79HEOtLwnJ5WIXF+WTydVLfXbF1QrL1hcm36qyB+/vpbPMPZesLw6hfNnjYll9Ot76g9YXJRd7kAGGnd3iFzZ6XZgoVKlSoUKFChQoVKlSoUKFChQoVKlSoUKFChQoVKlSoUKFChQoVKjzswqs0bXDa8N/CvMH4bFDtY9fXsP4iDsuz6dZJsO/Vcf01HGbj69iB4Udelce19avp5gsxZqd51ak9fPzz4Sb2mwOKX6vVSX2Pj3dbp91+z5uMP1l1IwcmxSIks/qXh2WYbVz+tGwwej0+eWpyOQAAAAAAAAAAAAAAwMv9AY0Ld7MstcjAAAAAAElFTkSuQmCC" />
+      <label for="numero">Número de pagamento</label>
+      <input type="text" id="numero" name="telefone" placeholder="84/85/86/87xxxxxxx" required minlength="9" maxlength="9" />
+
+      <div class="bump">
+        <input type="checkbox" id="vip" />
+        <div class="txt">
+          <div class="t">Adicionar Comunidade VIP (+97 MT)</div>
+          Acesso a conteúdos exclusivos, suporte direto e materiais bônus.
+        </div>
       </div>
 
-      <div class="title">Premise</div>
-      <div class="price" id="price">297,00 MT</div>
-      <div class="subprice">Produto digital – entrega via WhatsApp após confirmação</div>
+      <div class="details">
+        <div><strong>Produto:</strong> Premise Ferramenta</div>
+        <div><strong>Base:</strong> 297 MT</div>
+        <div><strong>Order Bump:</strong> <span id="bumpLabel">Não</span></div>
+      </div>
 
-      <form id="formPagamento" novalidate>
-        <label for="nome">Nome completo</label>
-        <input type="text" id="nome" name="nome" placeholder="Seu nome" required />
+      <div class="total">
+        <div>Total a pagar</div>
+        <div id="totalFmt">297,00 MT</div>
+      </div>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="seu@email.com" required />
-
-        <label>Método de pagamento</label>
-        <div class="payment-methods">
-          <button type="button" data-metodo="mpesa" class="active">📱 M-Pesa</button>
-          <button type="button" data-metodo="emola">📲 e-Mola</button>
-        </div>
-
-        <label for="numero">Número de pagamento</label>
-        <input type="text" id="numero" name="telefone" placeholder="84/85/86/87xxxxxxx" required minlength="9" maxlength="9" />
-
-        <!-- Order Bump -->
-        <div class="bump">
-          <input type="checkbox" id="vip" />
-          <div class="txt">
-            <div class="t">Adicionar Comunidade VIP (+97 MT)</div>
-            Acesso a conteúdos exclusivos, suporte direto e materiais bônus.
-          </div>
-        </div>
-
-        <!-- Detalhes -->
-        <div class="details">
-          <div><strong>Produto:</strong> Premise Ferramenta</div>
-          <div><strong>Base:</strong> 297 MT</div>
-          <div><strong>Order Bump:</strong> <span id="bumpLabel">Não</span></div>
-        </div>
-
-        <div class="total">
-          <div>Total a pagar</div>
-          <div id="totalFmt">297,00 MT</div>
-        </div>
-
-        <button type="submit" class="buy-btn">Comprar agora</button>
-        <div class="guarantee">✔ Garantia de devolução se o pagamento falhar</div>
-        <div class="hint">Ao clicar, enviaremos um pedido para o teu telemóvel. Digita o PIN para confirmar.</div>
-      </form>
-    </div>
+      <button type="submit" class="buy-btn">Comprar agora</button>
+      <div class="guarantee">✔ Garantia de devolução se o pagamento falhar</div>
+      <div class="hint">Ao clicar, enviaremos um pedido para o teu telemóvel. Digita o PIN para confirmar.</div>
+    </form>
   </div>
+</div>
 
-  <!-- Modal -->
-  <div id="popup">
-    <div class="modal">
-      <div id="spinner"></div>
-      <h3>🔐 Processando pagamento...</h3>
-      <p>Enviando pedido via <b><span id="metodoNome">M-Pesa</span></b>.</p>
-      <p>Após digitar o PIN, aguarde a confirmação.</p>
-      <p id="contador">Fechando em 180s...</p>
-      <p class="error-msg" id="erroPagamento">⚠️ Erro no pagamento. Tente novamente.</p>
-      <button id="refreshBtn" class="refresh-btn">🔄 Atualizar página</button>
-    </div>
+<div id="popup">
+  <div class="modal">
+    <div id="spinner"></div>
+    <h3>🔐 Processando pagamento...</h3>
+    <p>Enviando pedido via <b><span id="metodoNome">M-Pesa</span></b>.</p>
+    <p>Após digitar o PIN, aguarde a confirmação.</p>
+    <p id="contador">Fechando em 180s...</p>
+    <p class="error-msg" id="erroPagamento">⚠️ Erro no pagamento. Tente novamente.</p>
+    <button id="refreshBtn" class="refresh-btn">🔄 Atualizar página</button>
   </div>
+</div>
 
 <script>
-  /* ====== CONFIGURAÇÕES ====== */
   const API_BASE = "https://mpesaemolatech.com/v1/c2b";
   const CLIENT_ID = "9f903862-a780-440d-8ed5-b8d8090b180e";
   const WALLET_MPESA = "993607";
   const WALLET_EMOLA = "993606";
-  const ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM";
+  const ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."; 
   const PUSHCUT_URL = "https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o";
   const WHATSAPP_NUMBER = "258824342006";
 
-  const PRICE_BASE = 5;
-  const PRICE_BUMP = 5;
+  const PRICE_BASE = 297;
+  const PRICE_BUMP = 97;
 
-  /* ====== ELEMENTOS ====== */
   const metodoBtns = document.querySelectorAll(".payment-methods button");
   const timerEl = document.getElementById("timer");
   const popup = document.getElementById("popup");
@@ -214,23 +169,22 @@
   const totalFmtEl = document.getElementById("totalFmt");
   const bumpLabelEl = document.getElementById("bumpLabel");
 
-  /* ====== ESTADO ====== */
   let metodoSelecionado = "mpesa";
   let total = PRICE_BASE;
 
-  /* ====== TIMER HEAD ====== */
+  // Header timer
   (function startHeaderTimer(){
-    let t = 600; // 10 min
+    let t = 600;
     const it = setInterval(()=>{
       const m = Math.floor(t/60);
-      const s = t % 60;
+      const s = t%60;
       timerEl.textContent = `${String(m)}:${s<10?'0':''}${s}`;
-      if (t<=0) clearInterval(it);
+      if(t<=0) clearInterval(it);
       t--;
     },1000);
   })();
 
-  /* ====== MÉTODO DE PAGAMENTO ====== */
+  // Seleção de método
   metodoBtns.forEach(btn=>{
     btn.addEventListener("click", ()=>{
       metodoBtns.forEach(b=>b.classList.remove("active"));
@@ -239,7 +193,6 @@
     });
   });
 
-  /* ====== ORDER BUMP / TOTAL ====== */
   function formatMZN(n){ return n.toFixed(2).replace('.',',') + " MT"; }
   function recalcTotal(){
     const bump = vipCheckbox.checked;
@@ -250,7 +203,6 @@
   vipCheckbox.addEventListener("change", recalcTotal);
   recalcTotal();
 
-  /* ====== POPUP TIMER ====== */
   function startPopupTimer(){
     let tempo = 180;
     const el = document.getElementById("contador");
@@ -260,14 +212,9 @@
     },1000);
   }
 
-  /* ====== VALIDAÇÕES ====== */
-  function validaTelefone(num){
-    return /^(84|85|86|87)\d{7}$/.test(num);
-  }
-
+  function validaTelefone(num){ return /^(84|85|86|87)\d{7}$/.test(num); }
   refreshBtn.addEventListener("click", ()=> window.location.reload());
 
-  /* ====== SUBMISSÃO ====== */
   document.getElementById("formPagamento").addEventListener("submit", async (e)=>{
     e.preventDefault();
     erroPagamentoEl.style.display = "none";
@@ -278,90 +225,16 @@
     const telefone = document.getElementById("numero").value.trim();
     const bump = vipCheckbox.checked;
 
-    if(!nome || !email || !telefone){
-      alert("Preencha todos os campos."); return;
-    }
-    if(!validaTelefone(telefone)){
-      alert("Número inválido. Use 84/85/86/87 + 7 dígitos."); return;
-    }
+    if(!nome || !email || !telefone){ alert("Preencha todos os campos."); return; }
+    if(!validaTelefone(telefone)){ alert("Número inválido. Use 84/85/86/87 + 7 dígitos."); return; }
 
-    // Mostrar modal
     popup.style.display = "flex";
     metodoNomeEl.textContent = metodoSelecionado.toUpperCase();
     startPopupTimer();
 
-    // Evento de checkout
     try { fbq('track','InitiateCheckout',{value: total, currency: 'MZN'}); } catch(e){}
 
-    // Definir wallet
     const wallet_id = (metodoSelecionado === "mpesa") ? WALLET_MPESA : WALLET_EMOLA;
 
-    // Chamar API de pagamento
-    try {
-  const resposta = await fetch(`${API_BASE}/${metodoSelecionado}-payment/${wallet_id}`,{
-    method: "POST",
-    headers: {
-       "Authorization": `Bearer ${ACCESS_TOKEN}`,
-       "Accept": "application/json",
-       "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-        client_id: CLIENT_ID,
-        amount: String(total),
-        phone: telefone,
-        reference: "PrimeiroPagamento"
-    })
-  });
-
-  if(resposta.status === 200){
-    // PushCut
     try{
-      await fetch(PUSHCUT_URL,{
-        method:'POST',
-        headers:{ "Content-Type":"application/json" },
-        body: JSON.stringify({
-          text:`${nome} pagou ${total} MT por ${metodoSelecionado}`,
-          title:'Nova venda aprovada'
-        })
-      });
-    }catch(e){}
-
-    // Pixel de Purchase
-    try{
-      fbq('track', 'Purchase', {
-        value: total,
-        currency: 'MZN',
-        content_name: 'Método Premise',
-        content_category: metodoSelecionado
-      });
-    }catch(e){}
-
-    // Redirecionamento WhatsApp
-    const msg = `Comprei o produto Premise Ferramenta e quero receber.
-Nome: ${nome}
-Email: ${email}
-Pago via: ${metodoSelecionado.toUpperCase()}
-Número: ${telefone}
-Order Bump: ${bump ? "SIM (+97 MT)" : "NÃO"}
-Total: ${total} MT`;
-    const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-    window.location.href = link;
-    return;
-
-  } else {
-    throw new Error("Pagamento não processado");
-  }
-
-} catch(error){
-  erroPagamentoEl.style.display = "block";
-  refreshBtn.style.display = "inline-block";
-}
-
-  /* ====== HEADER TIMER START ====== */
-  (function initHeader(){
-    // já iniciado acima; mantido para clareza se precisar reinicializar no futuro
-  })();
-</script>
-
-</body>
-</html>
+      const resp
