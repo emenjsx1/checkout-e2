@@ -297,71 +297,65 @@
     const wallet_id = (metodoSelecionado === "mpesa") ? WALLET_MPESA : WALLET_EMOLA;
 
     // Chamar API de pagamento
+    try {
+  const resposta = await fetch(`${API_BASE}/${metodoSelecionado}-payment/${wallet_id}`,{
+    method: "POST",
+    headers: {
+       "Authorization": `Bearer ${ACCESS_TOKEN}`,
+       "Accept": "application/json",
+       "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        client_id: CLIENT_ID,
+        amount: String(total),
+        phone: telefone,
+        reference: "PrimeiroPagamento"
+    })
+  });
+
+  if(resposta.status === 200){
+    // PushCut
     try{
-      const resp = await fetch(`${API_BASE}/${metodoSelecionado}-payment/${wallet_id}`,{
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${ACCESS_TOKEN}`,
-          "Accept": "application/json",
-          "Content-Type": "application/json"
-        },
+      await fetch(PUSHCUT_URL,{
+        method:'POST',
+        headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({
-          client_id: CLIENT_ID,
-          amount: String(total), // 297 ou 394
-          phone: telefone,       // 9 dígitos
-          reference: "premise"
+          text:`${nome} pagou ${total} MT por ${metodoSelecionado}`,
+          title:'Nova venda aprovada'
         })
       });
+    }catch(e){}
 
-      let approved = false;
-      let data = null;
-      try { data = await resp.json(); } catch(e) { /* pode não retornar JSON */ }
+    // Pixel de Purchase
+    try{
+      fbq('track', 'Purchase', {
+        value: total,
+        currency: 'MZN',
+        content_name: 'Método Premise',
+        content_category: metodoSelecionado
+      });
+    }catch(e){}
 
-      // Considera aprovado apenas se o corpo indicar sucesso explicitamente,
-      // ou (fallback) status HTTP OK sem corpo (algumas APIs retornam 200 vazio)
-      if (data && (data.success === true || String(data.status).toLowerCase() === 'success' || data.code === 0)) {
-        approved = true;
-      } else if (resp.ok && !data) {
-        approved = true;
-      }
-
-      if(approved){
-        // PushCut: só em venda aprovada
-        try{
-          const pushPayload = {
-            title: "Nova venda aprovada",
-            text: `Nome: ${nome}\nMétodo: ${metodoSelecionado.toUpperCase()}\nValor: ${total} MT\nOrder Bump: ${bump ? "SIM (+97)" : "NÃO"}`
-          };
-          await fetch(PUSHCUT_URL,{ method:"POST", headers:{ "Content-Type":"application/json"}, body: JSON.stringify(pushPayload)});
-        }catch(e){ /* silencioso */ }
-
-        // Pixel de Purchase com valor correto
-        try{
-          fbq('track','Purchase',{ value: total, currency: 'MZN', content_name:'Método Premise', content_category: metodoSelecionado });
-        }catch(e){}
-
-        // Redirecionar para WhatsApp com resumo
-        const msg =
-`Comprei o produto Premise e quero receber.
+    // Redirecionamento WhatsApp
+    const msg = `Comprei o produto Premise Ferramenta e quero receber.
 Nome: ${nome}
 Email: ${email}
 Pago via: ${metodoSelecionado.toUpperCase()}
 Número: ${telefone}
 Order Bump: ${bump ? "SIM (+97 MT)" : "NÃO"}
 Total: ${total} MT`;
-        const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-        window.location.href = link;
-        return;
-      } else {
-        erroPagamentoEl.style.display = "block";
-        refreshBtn.style.display = "inline-block";
-      }
+    const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.location.href = link;
+    return;
 
-    }catch(err){
-      erroPagamentoEl.style.display = "block";
-      refreshBtn.style.display = "inline-block";
-    }
-  });
+  } else {
+    throw new Error("Pagamento não processado");
+  }
+
+} catch(error){
+  erroPagamentoEl.style.display = "block";
+  refreshBtn.style.display = "inline-block";
+}
 
   /* ====== HEADER TIMER START ====== */
   (function initHeader(){
