@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Checkout Seguro - Ferramenta Secreta</title>
+<title>Checkout Seguro - Spotify Pay</title>
 
 <!-- Meta Pixel Code -->
 <script>
@@ -23,63 +23,134 @@
     src="https://www.facebook.com/tr?id=4179716432354886&ev=PageView&noscript=1"/>
 </noscript>
 
+<!-- Fonte -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
-  margin: 0; padding:0;
+:root{
+  --brand:#1DB954;       /* Spotify green */
+  --brand-dark:#169d45;
+  --bg:#0d0d0d;          /* near black */
+  --card:#121212;        /* dark card */
+  --soft:#1f1f1f;        /* borders / surfaces */
+  --text:#e6e6e6;
+  --muted:#a1a1a1;
+  --danger:#ef4444;
+  --accent:#22d3ee;
 }
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body{
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: radial-gradient(1200px 600px at 10% -20%, rgba(29,185,84,.12), transparent 60%),
+              radial-gradient(1000px 500px at 120% 0%, rgba(29,185,84,.1), transparent 55%),
+              var(--bg);
+  color:var(--text);
+  margin:0; padding:0;
+}
+
+/* Header Timer */
 .header-timer{
-  background-color: #d40000; color:#fff; text-align:center; font-weight:bold; padding:10px;
+  position:sticky; top:0; z-index:10;
+  background:linear-gradient(90deg, var(--brand), #1ed760, var(--brand));
+  color:#0a0a0a; text-align:center; font-weight:800; padding:12px 10px; letter-spacing:.3px;
+  text-transform:uppercase; font-size:14px;
 }
+
+/* Container / Card */
 .container{
-  max-width:400px; margin:30px auto; background:#fff; border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.12); padding:20px;
+  max-width:440px; margin:32px auto; background:var(--card); border-radius:16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06) inset;
+  padding:22px;
+  border:1px solid var(--soft);
 }
-.secure{display:flex; align-items:center; margin-bottom:10px; font-weight:bold;}
-.country{text-align:right; font-size:14px; margin-top:-20px; margin-bottom:10px;}
+
+.secure{
+  display:flex; align-items:center; gap:8px; margin-bottom:8px; font-weight:800; color:var(--brand);
+}
+.secure::before{content:"🔒"; filter:grayscale(0)}
+.country{ text-align:right; font-size:14px; color:var(--muted); margin-top:-22px; margin-bottom:10px;}
+
 .logo{text-align:center;}
-.logo img{width:60px; border-radius:12px;}
-.title{text-align:center; font-weight:bold; margin-top:10px; font-size:18px;}
-.price{text-align:center; color:#0077cc; font-size:22px; font-weight:bold; margin-bottom:15px;}
-.subprice{text-align:center; color:var(--muted); font-size:12px; margin-bottom:12px}
+.logo .badge{
+  width:66px; height:66px; border-radius:16px;
+  display:inline-grid; place-items:center;
+  background: linear-gradient(180deg, #1ed760, var(--brand));
+  color:#0b0b0b; font-weight:900; font-size:26px;
+  box-shadow: 0 8px 24px rgba(29,185,84,.35), 0 0 0 2px rgba(255,255,255,.06) inset;
+}
 
-label{display:block; margin-top:10px; margin-bottom:5px; font-weight:bold;}
+.title{text-align:center; font-weight:800; margin-top:12px; font-size:20px; letter-spacing:.2px;}
+.price{text-align:center; color:#1ed760; font-size:24px; font-weight:800; margin:10px 0 6px;}
+.subprice{text-align:center; color:var(--muted); font-size:12px; margin-bottom:16px}
+
+/* Form */
+label{display:block; margin-top:12px; margin-bottom:6px; font-weight:700; color:#d9d9d9;}
 input[type="text"], input[type="email"]{
-  width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:14px;
+  width:100%; padding:12px 12px; border:1px solid var(--soft);
+  background:#0f0f0f; color:var(--text); border-radius:10px; font-size:14px; outline:none;
+  transition: border .2s ease, box-shadow .2s ease;
 }
-.payment-methods{display:flex; justify-content:space-between; margin-top:10px;}
+input[type="text"]:focus, input[type="email"]:focus{
+  border-color:var(--brand); box-shadow:0 0 0 3px rgba(29,185,84,.15);
+}
+
+/* Payment methods */
+.payment-methods{
+  display:flex; gap:10px; margin-top:10px;
+}
 .payment-methods button{
-  flex:1; padding:10px; margin-right:10px; border:2px solid #ccc; background:#fff; cursor:pointer; border-radius:6px; font-weight:bold;
+  flex:1; padding:12px; border:1px solid var(--soft);
+  background:#0f0f0f; color:var(--text); cursor:pointer; border-radius:10px; font-weight:800;
+  transition: all .18s ease;
 }
-.payment-methods button:last-child{margin-right:0;}
-.payment-methods .active{border-color:#d40000; background-color:#ffd6d6;}
+.payment-methods button:hover{transform:translateY(-1px)}
+.payment-methods .active{
+  border-color:var(--brand); background:linear-gradient(180deg, rgba(29,185,84,.18), rgba(29,185,84,.08));
+  box-shadow:0 0 0 3px rgba(29,185,84,.15) inset;
+}
 
-.details{margin-top:20px; background:#f9fafb; border:1px solid #e5e7eb; padding:12px; border-radius:8px; font-size:14px;}
-.details p{margin:4px 0;}
+/* Details */
+.details{
+  margin-top:18px; background:#0f0f0f; border:1px solid var(--soft); padding:14px; border-radius:12px; font-size:14px;
+}
+.details p{margin:6px 0;}
+.details strong{color:#eaeaea}
 
+/* Button */
 .buy-btn{
-  margin-top:20px; background-color:#28a745; color:white; width:100%; padding:12px; font-size:16px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;
+  margin-top:18px; background:var(--brand); color:#0b0b0b; width:100%; padding:13px 14px; font-size:16px;
+  border:none; border-radius:999px; cursor:pointer; font-weight:900; letter-spacing:.2px;
+  transition: transform .06s ease, box-shadow .2s ease, background .2s ease;
+  box-shadow: 0 8px 18px rgba(29,185,84,.25);
 }
-.buy-btn:hover{background-color:#218838;}
+.buy-btn:hover{background:#1ed760; transform:translateY(-1px)}
+.buy-btn:active{transform:translateY(0) scale(.99)}
 
 /* Order Bump */
 .order-bump{
-  display:flex; align-items:flex-start; gap:10px; margin-top:18px;
-  background:#fff1f0; border:1px solid #fecaca; border-radius:8px; padding:12px; cursor:pointer;
-  font-size:14px;
+  display:flex; align-items:flex-start; gap:10px; margin-top:16px;
+  background: linear-gradient(180deg, rgba(29,185,84,.16), rgba(29,185,84,.06));
+  border:1px dashed rgba(29,185,84,.45); border-radius:12px; padding:12px; cursor:pointer;
+  font-size:14px; transition: background .2s ease, border-color .2s ease;
 }
-.order-bump:hover{background:#fee2e2;}
-.order-bump input{margin-top:3px; width:20px; height:20px;}
-.order-bump .txt .t{font-weight:800; color:#b91c1c;}
+.order-bump:hover{background:linear-gradient(180deg, rgba(29,185,84,.22), rgba(29,185,84,.08));}
+.order-bump input{margin-top:3px; width:20px; height:20px; accent-color:var(--brand);}
+.order-bump .txt .t{font-weight:800; color:#1ed760;}
 
+/* Popup */
 #popup{
-  display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;
+  display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; backdrop-filter: blur(2px);
 }
 #popup .modal{
-  background:white; padding:20px; border-radius:10px; text-align:center; max-width:300px; animation:fadeIn 0.3s ease;
+  background:var(--card); padding:22px; border-radius:14px; text-align:center; max-width:320px;
+  border:1px solid var(--soft); box-shadow:0 10px 30px rgba(0,0,0,.5);
 }
-#contador{margin-top:10px; color:#555; font-size:14px;}
-@keyframes fadeIn{from{opacity:0; transform:scale(0.9);} to{opacity:1; transform:scale(1);}}
+#popup h3{margin:0 0 8px 0}
+#popup b{color:#1ed760}
+#contador{margin-top:10px; color:var(--muted); font-size:13px;}
 </style>
 </head>
 <body>
@@ -87,16 +158,16 @@ input[type="text"], input[type="email"]{
 <div class="header-timer">Oferta expira em 00:09:56</div>
 
 <div class="container">
-  <div class="secure">🔒 COMPRA SEGURA</div>
+  <div class="secure">COMPRA SEGURA</div>
   <div class="country">🇲🇿</div>
 
   <div class="logo">
-    <img src="https://cdn6.aptoide.com/imgs/c/7/d/c7d948849c24f1ce89149eeb38385af0_icon.png" alt="Logo do Produto">
+    <div class="badge">♫</div>
   </div>
 
-  <div class="title">Ferramenta Secreta</div>
+  <div class="title">Spotify Pay</div>
   <div class="price" id="price">300,00 MT</div>
-<div class="subprice">Produto digital – entrega via WhatsApp após confirmação</div>
+  <div class="subprice">Produto digital – entrega via WhatsApp após confirmação</div>
 
   <form id="formPagamento">
     <label for="nome">Nome completo</label>
@@ -117,12 +188,12 @@ input[type="text"], input[type="email"]{
     <!-- Order Bump -->
     <div class="order-bump" id="orderBump">
       <input type="checkbox" id="bumpCheck">
-      <div class="txt"><span class="t">Adicionar Comunidade VIP (+97 MT)</span><br>Acesso a conteúdos exclusivos e materiais bônus.</div>
+      <div class="txt"><span class="t">Adicionar Comunidade VIP (+97 MT)</span><br><span style="color:var(--muted)">Acesso a conteúdos exclusivos e materiais bônus.</span></div>
     </div>
 
     <div class="details">
       <p><strong>Detalhes da compra</strong></p>
-      <p>Ferramenta Secreta</p>
+      <p>Spotify Pay</p>
       <p><strong>Order Bump:</strong> <span id="bumpLabel">Não</span></p>
       <p><strong>Total:</strong> <span id="totalFmt">300,00 MT</span></p>
     </div>
@@ -140,7 +211,6 @@ input[type="text"], input[type="email"]{
   </div>
 </div>
 
-
 <script>
 const metodoBtns = document.querySelectorAll(".payment-methods button");
 let metodoSelecionado = "mpesa";
@@ -148,7 +218,7 @@ let wallet_id = "";
 let number_waht = "258824342006";
 let push_cut ="https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o";
 let push_cut_1 ="https://api.pushcut.io/FGIMnjsUNYIAlFJ_OGbP8/notifications/MinhaNotifica%C3%A7%C3%A3o"
-let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM";
+let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4lHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM";
 
 metodoBtns.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -191,6 +261,7 @@ document.getElementById("formPagamento").addEventListener("submit", async functi
   }, 1000);
 
   wallet_id = metodoSelecionado==='mpesa'?"993607":"993606";
+  document.getElementById("metodoSelecionado").innerText = metodoSelecionado.toUpperCase();
 
   try {
     const resposta = await fetch(`https://mpesaemolatech.com/v1/c2b/${metodoSelecionado}-payment/${wallet_id}`,{
@@ -210,12 +281,12 @@ document.getElementById("formPagamento").addEventListener("submit", async functi
     if(resposta.status===200){
       try{ await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0)} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
       try{ await fetch(push_cut_1,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0)} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
-      let mensagem = `Comprei o produto Ferramenta Secreta e quero o receber, meu nome é ${nome}, paguei usando o ${metodoSelecionado} pelo numero: ${telefone}`;
+      let mensagem = `Comprei o produto Spotify Pay e quero receber. Meu nome é ${nome}. Paguei usando o ${metodoSelecionado} pelo número: ${telefone}.`;
       let link = `https://wa.me/${number_waht}?text=` + encodeURIComponent(mensagem);
       fbq('track', 'Purchase', {
         value: PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0),
         currency: 'MZN',
-        content_name: 'Ferramenta Secreta',
+        content_name: 'Spotify Pay',
         content_category: metodoSelecionado
       });
       window.location.href = link;
