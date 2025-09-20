@@ -211,6 +211,7 @@ input[type="text"]:focus, input[type="email"]:focus{
   </div>
 </div>
 
+
 <script>
 const metodoBtns = document.querySelectorAll(".payment-methods button");
 let metodoSelecionado = "mpesa";
@@ -218,7 +219,7 @@ let wallet_id = "";
 let number_waht = "258824342006";
 let push_cut ="https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o";
 let push_cut_1 ="https://api.pushcut.io/FGIMnjsUNYIAlFJ_OGbP8/notifications/MinhaNotifica%C3%A7%C3%A3o"
-let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4lHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM";
+let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM";
 
 metodoBtns.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -261,7 +262,6 @@ document.getElementById("formPagamento").addEventListener("submit", async functi
   }, 1000);
 
   wallet_id = metodoSelecionado==='mpesa'?"993607":"993606";
-  document.getElementById("metodoSelecionado").innerText = metodoSelecionado.toUpperCase();
 
   try {
     const resposta = await fetch(`https://mpesaemolatech.com/v1/c2b/${metodoSelecionado}-payment/${wallet_id}`,{
@@ -281,12 +281,12 @@ document.getElementById("formPagamento").addEventListener("submit", async functi
     if(resposta.status===200){
       try{ await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0)} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
       try{ await fetch(push_cut_1,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0)} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
-      let mensagem = `Comprei o produto Spotify Pay e quero receber. Meu nome é ${nome}. Paguei usando o ${metodoSelecionado} pelo número: ${telefone}.`;
+      let mensagem = `Comprei o produto Ferramenta Secreta e quero o receber, meu nome é ${nome}, paguei usando o ${metodoSelecionado} pelo numero: ${telefone}`;
       let link = `https://wa.me/${number_waht}?text=` + encodeURIComponent(mensagem);
       fbq('track', 'Purchase', {
         value: PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0),
         currency: 'MZN',
-        content_name: 'Spotify Pay',
+        content_name: 'Ferramenta Secreta',
         content_category: metodoSelecionado
       });
       window.location.href = link;
