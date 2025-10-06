@@ -322,8 +322,8 @@ metodoBtns.forEach(btn => {
 const vipCheckbox = document.getElementById("bumpCheck");
 const totalFmtEl = document.getElementById("totalFmt");
 const bumpLabelEl = document.getElementById("bumpLabel");
-const PRICE_BASE = 197;
-const PRICE_BUMP = 97;
+const PRICE_BASE = 10;
+const PRICE_BUMP = 5;
 
 vipCheckbox.addEventListener("change",()=>{
   const total = PRICE_BASE + (vipCheckbox.checked ? PRICE_BUMP : 0);
